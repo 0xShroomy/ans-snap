@@ -8,6 +8,7 @@ import {
   ResolveDomainButton,
   Card,
 } from '../components';
+// Import React components instead of direct PNG imports
 import { defaultSnapOrigin } from '../config';
 import {
   useMetaMask,
@@ -22,8 +23,9 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   flex: 1;
-  margin-top: 7.6rem;
+  margin-top: 0;
   margin-bottom: 7.6rem;
+  background-color: ${({ theme }) => theme.colors.background?.default};
   ${({ theme }) => theme.mediaQueries.small} {
     padding-left: 2.4rem;
     padding-right: 2.4rem;
@@ -33,14 +35,41 @@ const Container = styled.div`
   }
 `;
 
+const Header = styled.div`
+  width: 100%;
+  padding: 3rem 2rem 4rem;
+  background-color: ${({ theme }) => theme.colors.background?.alternative};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+`;
+
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+`;
+
+const Logo = styled.img`
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-right: 1rem;
+`;
+
 const Heading = styled.h1`
   margin-top: 0;
-  margin-bottom: 2.4rem;
+  margin-bottom: 1.5rem;
   text-align: center;
+  font-size: 2.5rem;
 `;
 
 const Span = styled.span`
-  color: ${(props) => props.theme.colors.primary?.default};
+  color: #1bd47d;
+  font-weight: bold;
 `;
 
 const Subtitle = styled.p`
@@ -48,6 +77,8 @@ const Subtitle = styled.p`
   font-weight: 500;
   margin-top: 0;
   margin-bottom: 0;
+  text-align: center;
+  max-width: 600px;
   ${({ theme }) => theme.mediaQueries.small} {
     font-size: ${({ theme }) => theme.fontSizes.text};
   }
@@ -62,6 +93,7 @@ const CardContainer = styled.div`
   width: 100%;
   height: 100%;
   margin-top: 1.5rem;
+  padding: 0 1.5rem;
 `;
 
 const Notice = styled.div`
@@ -104,11 +136,12 @@ const ErrorMessage = styled.div`
 const ResultContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background?.alternative};
   border: 1px solid ${({ theme }) => theme.colors.border?.default};
-  border-radius: ${({ theme }) => theme.radii.default};
+  border-radius: 10px;
   padding: 2rem;
   margin-top: 1.5rem;
   width: 100%;
   max-width: 60rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 `;
 
 const ResultRow = styled.div`
@@ -121,14 +154,15 @@ const ResultLabel = styled.div`
   font-weight: bold;
   width: 120px;
   margin-right: 1rem;
+  color: #1bd47d;
 `;
 
 const ResultValue = styled.div`
   font-family: monospace;
   word-break: break-all;
   background: rgba(0, 0, 0, 0.05);
-  padding: 0.5rem;
-  border-radius: 4px;
+  padding: 0.7rem;
+  border-radius: 8px;
   flex: 1;
 `;
 
@@ -156,17 +190,17 @@ const DomainInput = styled.input`
 `;
 
 const ResolveButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary?.default};
-  color: ${({ theme }) => theme.colors.text?.inverse};
+  background-color: #1bd47d;
+  color: black;
   border: none;
-  border-radius: ${({ theme }) => theme.radii.default};
-  padding: 0 1.5rem;
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   
   &:hover {
-    background-color: ${({ theme }) => theme.colors.primary?.alternative};
+    opacity: 0.85;
   }
   
   &:disabled {
@@ -175,15 +209,27 @@ const ResolveButton = styled.button`
   }
 `;
 
+const SampleDomainsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+`;
+
 const SampleDomain = styled.span`
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  margin-right: 0.5rem;
+  background-color: rgba(27, 212, 125, 0.1);
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
   font-family: monospace;
   cursor: pointer;
   display: inline-block;
-  margin-bottom: 0.5rem;
+  border: 1px solid rgba(27, 212, 125, 0.2);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(27, 212, 125, 0.2);
+    transform: translateY(-1px);
+  }
 `;
 
 const Index = () => {
@@ -248,12 +294,23 @@ const Index = () => {
 
   return (
     <Container>
-      <Heading>
-        Welcome to <Span>Abstract Name Service</Span>
-      </Heading>
-      <Subtitle>
-        Resolve <code>.abs</code> domain names within MetaMask
-      </Subtitle>
+      <Header>
+        <LogoContainer>
+          <div style={{ width: '90px', height: '90px', marginBottom: '1rem' }}>
+            <img 
+              src="https://raw.githubusercontent.com/0xShroomy/ans-snap/main/packages/snap/images/ANSavatar.png" 
+              alt="ANS Logo" 
+              style={{ width: '100%', height: '100%', borderRadius: '50%' }} 
+            />
+          </div>
+        </LogoContainer>
+        <Heading>
+          Welcome to <Span>Abstract Name Service</Span>
+        </Heading>
+        <Subtitle>
+          Resolve <code>.abs</code> domain names within MetaMask
+        </Subtitle>
+      </Header>
       <CardContainer>
         {error && (
           <ErrorMessage>
@@ -317,11 +374,13 @@ const Index = () => {
                 <p>
                   <strong>Sample domains to try:</strong> (click to use)
                 </p>
-                <div>
+                <SampleDomainsContainer>
                   <SampleDomain onClick={() => handleSampleClick('example')}>example.abs</SampleDomain>
                   <SampleDomain onClick={() => handleSampleClick('hooded')}>hooded.abs</SampleDomain>
                   <SampleDomain onClick={() => handleSampleClick('test')}>test.abs</SampleDomain>
-                </div>
+                  <SampleDomain onClick={() => handleSampleClick('sidneybout')}>sidneybout.abs</SampleDomain>
+                  <SampleDomain onClick={() => handleSampleClick('shroomy97')}>shroomy97.abs</SampleDomain>
+                </SampleDomainsContainer>
                 <p><small>You may enter domain with or without the .abs extension</small></p>
                 <InputRow>
                   <DomainInput 
@@ -342,7 +401,7 @@ const Index = () => {
             
             {resolveResult && (
               <ResultContainer>
-                <h3>Resolution Results</h3>
+                <h3 style={{ color: '#1bd47d', marginTop: 0 }}>Resolution Results</h3>
                 <ResultRow>
                   <ResultLabel>Domain:</ResultLabel>
                   <ResultValue>{resolveResult.domain}</ResultValue>
