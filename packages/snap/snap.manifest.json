@@ -1,17 +1,17 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example",
+  "description": "Resolve .abs names from the Abstract Naming Service to Ethereum addresses",
+  "proposedName": "Abstract Name Service Resolver",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/0xshroomy/ans-snap.git"
   },
   "source": {
-    "shasum": "w6U/S41ex1qqfj8JTvbvr8xUrooUeb1XjJOHH1J7SoU=",
+    "shasum": "6mWHZbs2s/XT67CDDBdoJg4BgL7j84WRfoLXqYbinEo=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "packageName": "snap",
+        "packageName": "@hooded-phantoms/abstract-name-service-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }
@@ -21,7 +21,10 @@
     "endowment:rpc": {
       "dapps": true,
       "snaps": false
-    }
+    },
+    "snap_manageState": {},
+    "endowment:network-access": {},
+    "endowment:transaction-insight": {}
   },
   "platformVersion": "6.18.0",
   "manifestVersion": "0.1"

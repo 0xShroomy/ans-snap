@@ -1,11 +1,21 @@
 {
-  "name": "snap",
+  "name": "@hooded-phantoms/abstract-name-service-snap",
   "version": "0.1.0",
-  "description": "The 'Hello, world!' of MetaMask Snaps, now written in TypeScript.",
+  "description": "MetaMask Snap to resolve .abs domain names from the Abstract Naming Service.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/0xshroomy/ans-snap.git"
   },
+  "author": "Hooded Phantoms",
+  "keywords": [
+    "ethereum",
+    "metamask",
+    "metamask-snap",
+    "snap",
+    "abstract-chain",
+    "ans",
+    "domain-resolution"
+  ],
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "./dist/bundle.js",
   "files": [
@@ -27,7 +37,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@metamask/snaps-sdk": "~6.18.0"
+    "@metamask/snaps-sdk": "~6.18.0",
+    "ethers": "^6.13.5"
   },
   "devDependencies": {
     "@jest/globals": "^29.5.0",

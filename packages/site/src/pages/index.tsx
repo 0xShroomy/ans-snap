@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 
 import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  ResolveDomainButton,
   Card,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
@@ -100,27 +101,158 @@ const ErrorMessage = styled.div`
   }
 `;
 
+const ResultContainer = styled.div`
+  background-color: ${({ theme }) => theme.colors.background?.alternative};
+  border: 1px solid ${({ theme }) => theme.colors.border?.default};
+  border-radius: ${({ theme }) => theme.radii.default};
+  padding: 2rem;
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 60rem;
+`;
+
+const ResultRow = styled.div`
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: center;
+`;
+
+const ResultLabel = styled.div`
+  font-weight: bold;
+  width: 120px;
+  margin-right: 1rem;
+`;
+
+const ResultValue = styled.div`
+  font-family: monospace;
+  word-break: break-all;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
+  border-radius: 4px;
+  flex: 1;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 60rem;
+  margin-top: 2rem;
+`;
+
+const InputRow = styled.div`
+  display: flex;
+  margin-bottom: 1rem;
+  width: 100%;
+`;
+
+const DomainInput = styled.input`
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid ${({ theme }) => theme.colors.border?.default};
+  border-radius: ${({ theme }) => theme.radii.default};
+  margin-right: 1rem;
+  font-size: 1rem;
+`;
+
+const ResolveButton = styled.button`
+  background-color: ${({ theme }) => theme.colors.primary?.default};
+  color: ${({ theme }) => theme.colors.text?.inverse};
+  border: none;
+  border-radius: ${({ theme }) => theme.radii.default};
+  padding: 0 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary?.alternative};
+  }
+  
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.background?.alternative};
+    cursor: not-allowed;
+  }
+`;
+
+const SampleDomain = styled.span`
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  font-family: monospace;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+`;
+
 const Index = () => {
   const { error } = useMetaMaskContext();
   const { isFlask, snapsDetected, installedSnap } = useMetaMask();
   const requestSnap = useRequestSnap();
   const invokeSnap = useInvokeSnap();
+  
+  const [domainInput, setDomainInput] = useState('');
+  const [resolving, setResolving] = useState(false);
+  const [resolveResult, setResolveResult] = useState<{
+    domain?: string;
+    address?: string;
+    error?: string;
+    record?: string;
+  } | null>(null);
 
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? isFlask
     : snapsDetected;
 
-  const handleSendHelloClick = async () => {
-    await invokeSnap({ method: 'hello' });
+  const handleResolveDomain = async () => {
+    if (!domainInput) {
+      return;
+    }
+    
+    // Make sure domain has .abs extension
+    const domain = domainInput.includes('.abs') ? domainInput : `${domainInput}.abs`;
+    
+    setResolving(true);
+    try {
+      // Call get_domain_info to retrieve data without showing a dialog
+      const result = await invokeSnap({
+        method: 'get_domain_info',
+        params: { domainName: domain }
+      }) as any;
+      
+      setResolveResult({
+        domain,
+        address: result?.address || 'Not resolved',
+        record: result?.record || 'No record found'
+      });
+    } catch (err: any) {
+      setResolveResult({
+        domain,
+        error: err.message || 'Failed to resolve domain'
+      });
+    } finally {
+      setResolving(false);
+    }
+  };
+  
+  const handleInputKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleResolveDomain();
+    }
+  };
+  
+  const handleSampleClick = (domain: string) => {
+    setDomainInput(domain);
   };
 
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>Abstract Name Service</Span>
       </Heading>
       <Subtitle>
-        Get started by editing <code>src/index.tsx</code>
+        Resolve <code>.abs</code> domain names within MetaMask
       </Subtitle>
       <CardContainer>
         {error && (
@@ -171,32 +303,113 @@ const Index = () => {
             disabled={!installedSnap}
           />
         )}
-        <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!installedSnap}
-              />
-            ),
-          }}
-          disabled={!installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(installedSnap) &&
-            !shouldDisplayReconnectButton(installedSnap)
-          }
-        />
+        {installedSnap && (
+          <>
+            <Card
+              content={{
+                title: 'Test Domain Resolution',
+                description: 'Enter a domain name to resolve its Ethereum address',
+                button: <div />, // Use an empty div instead of null
+              }}
+              fullWidth
+            />
+            <FormContainer>
+                <p>
+                  <strong>Sample domains to try:</strong> (click to use)
+                </p>
+                <div>
+                  <SampleDomain onClick={() => handleSampleClick('example')}>example.abs</SampleDomain>
+                  <SampleDomain onClick={() => handleSampleClick('hooded')}>hooded.abs</SampleDomain>
+                  <SampleDomain onClick={() => handleSampleClick('test')}>test.abs</SampleDomain>
+                </div>
+                <p><small>You may enter domain with or without the .abs extension</small></p>
+                <InputRow>
+                  <DomainInput 
+                    value={domainInput}
+                    onChange={(e) => setDomainInput(e.target.value)}
+                    onKeyPress={handleInputKeyPress}
+                    placeholder="Enter domain name (e.g., example)"
+                    disabled={!installedSnap || resolving}
+                  />
+                  <ResolveButton 
+                    onClick={handleResolveDomain}
+                    disabled={!installedSnap || !domainInput || resolving}
+                  >
+                    {resolving ? 'Resolving...' : 'Resolve'}
+                  </ResolveButton>
+                </InputRow>
+              </FormContainer>
+            
+            {resolveResult && (
+              <ResultContainer>
+                <h3>Resolution Results</h3>
+                <ResultRow>
+                  <ResultLabel>Domain:</ResultLabel>
+                  <ResultValue>{resolveResult.domain}</ResultValue>
+                </ResultRow>
+                {resolveResult.address && (
+                  <ResultRow>
+                    <ResultLabel>Address:</ResultLabel>
+                    <ResultValue>{resolveResult.address}</ResultValue>
+                  </ResultRow>
+                )}
+                {resolveResult.record && (
+                  <ResultRow>
+                    <ResultLabel>Record:</ResultLabel>
+                    <ResultValue>{resolveResult.record}</ResultValue>
+                  </ResultRow>
+                )}
+                {resolveResult.error && (
+                  <ResultRow>
+                    <ResultLabel>Error:</ResultLabel>
+                    <ResultValue>{resolveResult.error}</ResultValue>
+                  </ResultRow>
+                )}
+              </ResultContainer>
+            )}
+          </>
+        )}
+        
+        {!installedSnap && (
+          <Card
+            content={{
+              title: 'Resolve .abs Domain',
+              description:
+                'Lookup a registered Abstract Name Service domain and see its resolved address.',
+              button: (
+                <ResolveDomainButton
+                  onClick={() => {}}
+                  disabled={true}
+                />
+              ),
+            }}
+            disabled={!installedSnap}
+            fullWidth={
+              isMetaMaskReady &&
+              Boolean(installedSnap) &&
+              !shouldDisplayReconnectButton(installedSnap)
+            }
+          />
+        )}
         <Notice>
           <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
+            <b>How it works:</b> This Snap allows you to resolve <b>.abs</b> domain names from the Abstract Name Service directly within MetaMask. 
+            Once installed, you can enter domain names like <code>example.abs</code> in the transaction recipient field, 
+            and the Snap will automatically resolve the address for you.
           </p>
+          <p>
+            <b>Two ways to use the Snap:</b>
+          </p>
+          <ol>
+            <li>
+              <b>For testing domain resolution:</b> Use the form above to directly resolve domain names to addresses.
+              This doesn't require a transaction - it just checks if the domain exists and what address it points to.
+            </li>
+            <li>
+              <b>For sending transactions:</b> Open MetaMask Flask, start a transaction, and type an <code>.abs</code> domain
+              in the recipient field. The Snap will show transaction insights with the resolved address information.
+            </li>
+          </ol>
         </Notice>
       </CardContainer>
     </Container>

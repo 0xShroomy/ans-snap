@@ -1,21 +1,46 @@
-# @metamask/template-snap-monorepo
+# Abstract Name Service (ANS) Resolver Snap
 
-This repository demonstrates how to develop a snap with TypeScript. For detailed
-instructions, see [the MetaMask documentation](https://docs.metamask.io/guide/snaps.html#serving-a-snap-to-your-local-environment).
+![ANS Logo](/packages/snap/images/ANSavatar.png)
 
-MetaMask Snaps is a system that allows anyone to safely expand the capabilities
-of MetaMask. A _snap_ is a program that we run in an isolated environment that
-can customize the wallet experience.
+A MetaMask Snap that allows users to resolve `.abs` domain names from the Abstract Name Service to Ethereum addresses. This Snap makes it easier to send transactions to human-readable domain names instead of long hexadecimal addresses.
 
-## Snaps is pre-release software
+## Features
 
-To interact with (your) Snaps, you will need to install [MetaMask Flask](https://metamask.io/flask/),
-a canary distribution for developers that provides access to upcoming features.
+- **Domain Resolution**: Resolve `.abs` domain names to Ethereum addresses
+- **Transaction Insights**: See domain resolution information directly in MetaMask when sending to `.abs` domains
+- **Record Lookup**: View additional records associated with domain names
 
-## Getting Started
+## Installation
 
-Clone the template-snap repository [using this template](https://github.com/MetaMask/template-snap-monorepo/generate)
-and set up the development environment:
+The ANS Snap requires [MetaMask Flask](https://metamask.io/flask/), a distribution of MetaMask that provides access to the Snaps system.
+
+1. Install [MetaMask Flask](https://metamask.io/flask/)
+2. Visit [our website](https://abstractnamingservice.xyz) or the [MetaMask Snap Directory](https://snaps.metamask.io)
+3. Click "Install Snap" to add the ANS Resolver to your MetaMask
+
+## Usage
+
+After installing the ANS Snap, you can use it in two ways:
+
+### 1. Direct Domain Resolution
+
+Use the Snap to lookup information about a domain:
+
+1. Click on the MetaMask extension
+2. Navigate to the Snaps section
+3. Select the ANS Resolver Snap
+4. Enter a domain name (e.g., `example.abs`) to resolve
+
+### 2. Transaction Sending
+
+Send transactions using domain names:
+
+1. Start a transaction in MetaMask
+2. In the "Send to" field, enter an `.abs` domain name
+3. The Snap will automatically resolve the domain and show you the corresponding address
+4. Confirm the transaction details and proceed as normal
+
+## Development
 
 ```shell
 yarn install && yarn start
