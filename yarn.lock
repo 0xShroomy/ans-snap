@@ -2200,9 +2200,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hooded-phantoms/abstract-name-service-snap@workspace:packages/snap":
+"@hooded-hub/abstract-name-service-snap@workspace:packages/snap":
   version: 0.0.0-use.local
-  resolution: "@hooded-phantoms/abstract-name-service-snap@workspace:packages/snap"
+  resolution: "@hooded-hub/abstract-name-service-snap@workspace:packages/snap"
   dependencies:
     "@jest/globals": ^29.5.0
     "@metamask/snaps-cli": ^6.6.0

@@ -6,7 +6,7 @@ This repository contains the MetaMask Snap for resolving `.abs` domain names fro
 
 ## Installation
 
-https://snaps.metamask.io/snap/npm/@hooded-phantoms/abstract-name-service-snap/
+https://snaps.metamask.io/snap/npm/@hooded-hub/abstract-name-service-snap/
 
 ## What It Does
 

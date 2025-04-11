@@ -7,11 +7,11 @@
     "url": "https://github.com/0xshroomy/ans-snap.git"
   },
   "source": {
-    "shasum": "6mWHZbs2s/XT67CDDBdoJg4BgL7j84WRfoLXqYbinEo=",
+    "shasum": "xyGmXgLe3wY9/cMLlfARaBVfYMi37MSuDjJxQjBTs2w=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "packageName": "@hooded-phantoms/abstract-name-service-snap",
+        "packageName": "@hooded-hub/abstract-name-service-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }
