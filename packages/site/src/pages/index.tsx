@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { useState } from 'react';
+import styled from 'styled-components';
 
 import {
   ConnectButton,
@@ -53,12 +53,14 @@ const LogoContainer = styled.div`
   margin-bottom: 2rem;
 `;
 
+/* Removed unused Logo component - kept for future reference
 const Logo = styled.img`
   width: 90px;
   height: 90px;
   border-radius: 50%;
   margin-right: 1rem;
 `;
+*/
 
 const Heading = styled.h1`
   margin-top: 0;
@@ -96,6 +98,7 @@ const CardContainer = styled.div`
   padding: 0 1.5rem;
 `;
 
+/* Removed unused Notice component - kept for future reference
 const Notice = styled.div`
   background-color: ${({ theme }) => theme.colors.background?.alternative};
   border: 1px solid ${({ theme }) => theme.colors.border?.default};
@@ -114,6 +117,7 @@ const Notice = styled.div`
     padding: 1.6rem;
   }
 `;
+*/
 
 const ErrorMessage = styled.div`
   background-color: ${({ theme }) => theme.colors.error?.muted};
@@ -198,11 +202,11 @@ const ResolveButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  
+
   &:hover {
     opacity: 0.8;
   }
-  
+
   &:disabled {
     background-color: ${({ theme }) => theme.colors.background?.alternative};
     cursor: not-allowed;
@@ -225,7 +229,7 @@ const SampleDomain = styled.span`
   display: inline-block;
   border: 1px solid rgba(27, 212, 125, 0.2);
   transition: all 0.2s ease;
-  
+
   &:hover {
     background-color: rgba(27, 212, 125, 0.2);
     transform: translateY(-1px);
@@ -237,7 +241,7 @@ const Index = () => {
   const { isFlask, snapsDetected, installedSnap } = useMetaMask();
   const requestSnap = useRequestSnap();
   const invokeSnap = useInvokeSnap();
-  
+
   const [domainInput, setDomainInput] = useState('');
   const [resolving, setResolving] = useState(false);
   const [resolveResult, setResolveResult] = useState<{
@@ -255,39 +259,43 @@ const Index = () => {
     if (!domainInput) {
       return;
     }
-    
+
     // Make sure domain has .abs extension
-    const domain = domainInput.includes('.abs') ? domainInput : `${domainInput}.abs`;
-    
+    const domain = domainInput.includes('.abs')
+      ? domainInput
+      : `${domainInput}.abs`;
+
     setResolving(true);
     try {
       // Call get_domain_info to retrieve data without showing a dialog
-      const result = await invokeSnap({
+      const result = (await invokeSnap({
         method: 'get_domain_info',
-        params: { domainName: domain }
-      }) as any;
-      
+        params: { domainName: domain },
+      })) as any;
+
       setResolveResult({
         domain,
         address: result?.address || 'Not resolved',
-        record: result?.record || 'No record found'
+        record: result?.record || 'No record found',
       });
-    } catch (err: any) {
+    } catch (domainError: any) {
       setResolveResult({
         domain,
-        error: err.message || 'Failed to resolve domain'
+        error: domainError.message || 'Failed to resolve domain',
       });
     } finally {
       setResolving(false);
     }
   };
-  
-  const handleInputKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleResolveDomain();
+
+  const handleInputKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      // Using void to explicitly ignore the promise
+      // eslint-disable-next-line no-void
+      void handleResolveDomain();
     }
   };
-  
+
   const handleSampleClick = (domain: string) => {
     setDomainInput(domain);
   };
@@ -297,10 +305,10 @@ const Index = () => {
       <Header>
         <LogoContainer>
           <div style={{ width: '90px', height: '90px', marginBottom: '1rem' }}>
-            <img 
-              src="https://raw.githubusercontent.com/0xShroomy/ans-snap/main/packages/snap/images/ANSavatar.png" 
-              alt="ANS Logo" 
-              style={{ width: '100%', height: '100%', borderRadius: '50%' }} 
+            <img
+              src="https://raw.githubusercontent.com/0xShroomy/ans-snap/main/packages/snap/images/ANSavatar.png"
+              alt="ANS Logo"
+              style={{ width: '100%', height: '100%', borderRadius: '50%' }}
             />
           </div>
         </LogoContainer>
@@ -365,56 +373,76 @@ const Index = () => {
             <Card
               content={{
                 title: 'Test .abs domain resolution',
-                description: 'Enter a domain name to resolve its record (Abstract address)',
+                description:
+                  'Enter a domain name to resolve its record (Abstract address)',
                 button: <div />, // Use an empty div instead of null
               }}
               fullWidth
             />
             <FormContainer>
-                <p>
-                  <strong>Sample domains to try:</strong> (click to use)
-                </p>
-                <SampleDomainsContainer>
-                  <SampleDomain onClick={() => handleSampleClick('example')}>example.abs</SampleDomain>
-                  <SampleDomain onClick={() => handleSampleClick('hooded')}>hooded.abs</SampleDomain>
-                  <SampleDomain onClick={() => handleSampleClick('test')}>test.abs</SampleDomain>
-                  <SampleDomain onClick={() => handleSampleClick('bob')}>bob.abs</SampleDomain>
-                  <SampleDomain onClick={() => handleSampleClick('shroomy97')}>shroomy97.abs</SampleDomain>
-                </SampleDomainsContainer>
-                <p><small>You may enter domain with or without the .abs extension</small></p>
-                <InputRow>
-                  <DomainInput 
-                    value={domainInput}
-                    onChange={(e) => setDomainInput(e.target.value)}
-                    onKeyPress={handleInputKeyPress}
-                    placeholder="Enter domain name (e.g., example)"
-                    disabled={!installedSnap || resolving}
-                  />
-                  <ResolveButton 
-                    onClick={handleResolveDomain}
-                    disabled={!installedSnap || !domainInput || resolving}
-                  >
-                    {resolving ? 'Resolving...' : 'Resolve'}
-                  </ResolveButton>
-                </InputRow>
-              </FormContainer>
-            
+              <p>
+                <strong>Sample domains to try:</strong> (click to use)
+              </p>
+              <SampleDomainsContainer>
+                <SampleDomain onClick={() => handleSampleClick('example')}>
+                  gacha.abs
+                </SampleDomain>
+                <SampleDomain onClick={() => handleSampleClick('hooded')}>
+                  canna.abs
+                </SampleDomain>
+                <SampleDomain onClick={() => handleSampleClick('test')}>
+                  bearish.abs
+                </SampleDomain>
+                <SampleDomain onClick={() => handleSampleClick('bob')}>
+                  bob.abs
+                </SampleDomain>
+                <SampleDomain onClick={() => handleSampleClick('shroomy97')}>
+                  shroomy97.abs
+                </SampleDomain>
+              </SampleDomainsContainer>
+              <p>
+                <small>
+                  You may enter domain with or without the .abs extension
+                </small>
+              </p>
+              <InputRow>
+                <DomainInput
+                  value={domainInput}
+                  onChange={(event) => setDomainInput(event.target.value)}
+                  onKeyPress={handleInputKeyPress}
+                  placeholder="Enter domain name (e.g., example)"
+                  disabled={!installedSnap || resolving}
+                />
+                <ResolveButton
+                  onClick={() => {
+                    // eslint-disable-next-line no-void
+                    void handleResolveDomain();
+                  }}
+                  disabled={!installedSnap || !domainInput || resolving}
+                >
+                  {resolving ? 'Resolving...' : 'Resolve'}
+                </ResolveButton>
+              </InputRow>
+            </FormContainer>
+
             {resolveResult && (
               <ResultContainer>
-                <h3 style={{ color: '#1bd47d', marginTop: 0 }}>Resolution Results</h3>
+                <h3 style={{ color: '#1bd47d', marginTop: 0 }}>
+                  Resolution Results
+                </h3>
                 <ResultRow>
-                  <ResultLabel>Domain:</ResultLabel>
+                  <ResultLabel>Registered Domain:</ResultLabel>
                   <ResultValue>{resolveResult.domain}</ResultValue>
                 </ResultRow>
                 {resolveResult.address && (
                   <ResultRow>
-                    <ResultLabel>Address:</ResultLabel>
+                    <ResultLabel>Owner Address:</ResultLabel>
                     <ResultValue>{resolveResult.address}</ResultValue>
                   </ResultRow>
                 )}
                 {resolveResult.record && (
                   <ResultRow>
-                    <ResultLabel>Record:</ResultLabel>
+                    <ResultLabel>Set Record:</ResultLabel>
                     <ResultValue>{resolveResult.record}</ResultValue>
                   </ResultRow>
                 )}
@@ -428,7 +456,7 @@ const Index = () => {
             )}
           </>
         )}
-        
+
         {!installedSnap && (
           <Card
             content={{
@@ -437,7 +465,9 @@ const Index = () => {
                 'Lookup a registered ANS - Abstract Naming Servicem, a domain and see its resolved address.',
               button: (
                 <ResolveDomainButton
-                  onClick={() => {}}
+                  onClick={() => {
+                    /* Disabled button - no action needed */
+                  }}
                   disabled={true}
                 />
               ),
@@ -450,7 +480,6 @@ const Index = () => {
             }
           />
         )}
-        
       </CardContainer>
     </Container>
   );

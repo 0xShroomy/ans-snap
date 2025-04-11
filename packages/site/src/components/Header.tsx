@@ -1,7 +1,6 @@
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 import { HeaderButtons } from './Buttons';
-import { SnapLogo } from './SnapLogo';
 import { Toggle } from './Toggle';
 import { getThemePreference } from '../utils';
 
@@ -42,13 +41,26 @@ export const Header = ({
 }: {
   handleToggleClick: () => void;
 }) => {
-  const theme = useTheme();
-
   return (
     <HeaderWrapper>
       <LogoWrapper>
-        <div style={{ width: '36px', height: '36px', borderRadius: '50%', overflow: 'hidden', backgroundColor: '#1bd47d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ color: 'white', fontWeight: 'bold', fontSize: '12px' }}>ANS</span>
+        <div
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            backgroundColor: '#1bd47d',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span
+            style={{ color: 'white', fontWeight: 'bold', fontSize: '12px' }}
+          >
+            ANS
+          </span>
         </div>
         <Title>ANS-SNAP</Title>
       </LogoWrapper>
