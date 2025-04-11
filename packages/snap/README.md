@@ -1,12 +1,33 @@
-# TypeScript Example Snap
+# Abstract Name Service (ANS) MetaMask Snap
 
-This snap demonstrates how to develop a snap with TypeScript. It is a simple
-snap that displays a confirmation dialog when the `hello` JSON-RPC method is
-called.
+This snap enables MetaMask users to resolve `.abs` domain names to Ethereum addresses. The Abstract Name Service (ANS) is a decentralized domain name system built on the Abstract blockchain that allows users to register and manage domains with user-friendly names.
+
+## Features
+
+- Resolve `.abs` domain names to Ethereum addresses
+- View domain records associated with ANS domains
+- Seamless integration with MetaMask Flask
+
+## Usage
+
+This snap provides the following JSON-RPC methods:
+
+- `get_domain_info`: Retrieves address and record information for a domain without showing a dialog
+- `resolve_domain`: Resolves a domain name and displays the results in a confirmation dialog
 
 ## Testing
 
-The snap comes with some basic tests, to demonstrate how to write tests for
-snaps. To test the snap, run `yarn test` in this directory. This will use
-[`@metamask/snaps-jest`](https://github.com/MetaMask/snaps/tree/main/packages/snaps-jest)
-to run the tests in `src/index.test.ts`.
+The snap includes tests to verify domain resolution functionality. To run tests:
+
+```bash
+yarn test
+```
+
+## Development
+
+Built with:
+- TypeScript
+- MetaMask Snaps SDK
+- Ethers.js for blockchain interactions
+
+For more information, visit [https://github.com/0xShroomy/ans-snap](https://github.com/0xShroomy/ans-snap)
