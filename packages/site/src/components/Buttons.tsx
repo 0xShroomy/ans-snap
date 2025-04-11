@@ -39,6 +39,19 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
   margin-top: auto;
+  background-color: #1cd47e;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
   ${({ theme }) => theme.mediaQueries.small} {
     width: 100%;
   }

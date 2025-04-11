@@ -9,7 +9,7 @@ const breakpoints = ['600px', '768px', '992px'];
 const theme = {
   fonts: {
     default:
-      '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+      'PixelText, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
     code: 'ui-monospace,Menlo,Monaco,"Cascadia Mono","Segoe UI Mono","Roboto Mono","Oxygen Mono","Ubuntu Monospace","Source Code Pro","Fira Mono","Droid Sans Mono","Courier New", monospace',
   },
   fontSizes: {
@@ -121,6 +121,14 @@ export const dark: DefaultTheme = {
  * @returns Global style React component.
  */
 export const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: 'PixelText';
+    src: url('../assets/fonts/pixelText2.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
   html {
     /* 62.5% of the base size of 16px = 10px.*/
     font-size: 62.5%;
@@ -129,7 +137,7 @@ export const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${(props) => props.theme.colors.background?.default};
     color: ${(props) => props.theme.colors.text?.default};
-    font-family: ${(props) => props.theme.fonts.default};
+    font-family: 'PixelText', ${(props) => props.theme.fonts.default};
     font-size: ${(props) => props.theme.fontSizes.text};
     margin: 0;
   }
@@ -139,6 +147,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3, h4, h5, h6 {
+    font-family: 'PixelText', sans-serif !important;
     font-size: ${(props) => props.theme.fontSizes.heading};
     ${(props) => props.theme.mediaQueries.small} {
       font-size: ${(props) => props.theme.fontSizes.mobileHeading};

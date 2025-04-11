@@ -190,7 +190,7 @@ const DomainInput = styled.input`
 `;
 
 const ResolveButton = styled.button`
-  background-color: #1bd47d;
+  background-color: #1cd47e;
   color: black;
   border: none;
   border-radius: 10px;
@@ -200,7 +200,7 @@ const ResolveButton = styled.button`
   transition: all 0.2s ease-in-out;
   
   &:hover {
-    opacity: 0.85;
+    opacity: 0.8;
   }
   
   &:disabled {
@@ -305,7 +305,7 @@ const Index = () => {
           </div>
         </LogoContainer>
         <Heading>
-          Welcome to <Span>Abstract Name Service</Span>
+          Welcome to <Span>Abstract Naming Service</Span>
         </Heading>
         <Subtitle>
           Resolve <code>.abs</code> domain names within MetaMask
@@ -364,8 +364,8 @@ const Index = () => {
           <>
             <Card
               content={{
-                title: 'Test Domain Resolution',
-                description: 'Enter a domain name to resolve its Ethereum address',
+                title: 'Test .abs domain resolution',
+                description: 'Enter a domain name to resolve its record (Abstract address)',
                 button: <div />, // Use an empty div instead of null
               }}
               fullWidth
@@ -378,7 +378,7 @@ const Index = () => {
                   <SampleDomain onClick={() => handleSampleClick('example')}>example.abs</SampleDomain>
                   <SampleDomain onClick={() => handleSampleClick('hooded')}>hooded.abs</SampleDomain>
                   <SampleDomain onClick={() => handleSampleClick('test')}>test.abs</SampleDomain>
-                  <SampleDomain onClick={() => handleSampleClick('sidneybout')}>sidneybout.abs</SampleDomain>
+                  <SampleDomain onClick={() => handleSampleClick('bob')}>bob.abs</SampleDomain>
                   <SampleDomain onClick={() => handleSampleClick('shroomy97')}>shroomy97.abs</SampleDomain>
                 </SampleDomainsContainer>
                 <p><small>You may enter domain with or without the .abs extension</small></p>
@@ -434,7 +434,7 @@ const Index = () => {
             content={{
               title: 'Resolve .abs Domain',
               description:
-                'Lookup a registered Abstract Name Service domain and see its resolved address.',
+                'Lookup a registered ANS - Abstract Naming Servicem, a domain and see its resolved address.',
               button: (
                 <ResolveDomainButton
                   onClick={() => {}}
@@ -450,26 +450,7 @@ const Index = () => {
             }
           />
         )}
-        <Notice>
-          <p>
-            <b>How it works:</b> This Snap allows you to resolve <b>.abs</b> domain names from the Abstract Name Service directly within MetaMask. 
-            Once installed, you can enter domain names like <code>example.abs</code> in the transaction recipient field, 
-            and the Snap will automatically resolve the address for you.
-          </p>
-          <p>
-            <b>Two ways to use the Snap:</b>
-          </p>
-          <ol>
-            <li>
-              <b>For testing domain resolution:</b> Use the form above to directly resolve domain names to addresses.
-              This doesn't require a transaction - it just checks if the domain exists and what address it points to.
-            </li>
-            <li>
-              <b>For sending transactions:</b> Open MetaMask Flask, start a transaction, and type an <code>.abs</code> domain
-              in the recipient field. The Snap will show transaction insights with the resolved address information.
-            </li>
-          </ol>
-        </Notice>
+        
       </CardContainer>
     </Container>
   );

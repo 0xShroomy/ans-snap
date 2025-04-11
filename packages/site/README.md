@@ -1,43 +1,52 @@
-# TypeScript Example Snap Front-end
+# Abstract Name Service (ANS) Snap Demo Site
 
-This project was bootstrapped with [Gatsby](https://www.gatsbyjs.com/).
+<img src="../snap/images/ANSavatar.png" alt="ANS Logo" width="120" />
 
-## Available Scripts
+This package contains the demo site for the MetaMask Snap that resolves `.abs` domain names from the Abstract Name Service to Ethereum addresses.
 
-In the project directory, you can run:
+## Overview
 
-### `yarn start`
+The demo site provides an interactive interface for users to:
 
-Runs the app in the development mode.\
-Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
+- Install the ANS Snap to their MetaMask Flask wallet
+- Look up `.abs` domain names and see their resolved Ethereum addresses
+- Test the Snap's functionality in a user-friendly environment
+- Learn how to integrate the ANS Snap into their own projects
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Features
 
-### `yarn build`
+- **Domain Resolution**: Enter any `.abs` domain name to see its corresponding Ethereum address
+- **MetaMask Integration**: Easy one-click installation of the ANS Snap
+- **Sample Domains**: Test with pre-configured sample domains to see immediate results
+- **Responsive Design**: Works across desktop and mobile browsers
 
-Builds the app for production to the `public` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Development
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+# Install dependencies
+yarn install
 
-See the section about [deployment](https://www.gatsbyjs.com/docs/how-to/previews-deploys-hosting/) for more information.
+# Start development server
+yarn start
+# The site will be available at http://localhost:8000
 
-## Environment variables
+# Build for production
+yarn build
+# Creates optimized build in the public folder
+```
 
-Gatsby has built-in support for loading environment variables into the browser and Functions. Loading environment variables into Node.js requires a small code snippet.
+## Environment Variables
 
-In development, Gatsby will load environment variables from a file named `.env.development`. For builds, it will load from `.env.production`.
+The site can be configured using environment variables:
 
-By default you can use the `SNAP_ORIGIN` variable (used in `src/config/snap.ts`) to define a production origin for you snap (eg. `npm:MyPackageName`). If not defined it will defaults to `local:http://localhost:8080`.
+- `SNAP_ORIGIN`: Defines the origin for the ANS Snap (defaults to `local:http://localhost:8080`)
+- For production builds, rename `.env.production.dist` to `.env.production` and set your variables
 
-A `.env` file template is available, to use it rename `.env.production.dist` to `.env.production`
+## Technologies Used
 
-To learn more visit [Gatsby documentation](https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/)
+- **Frontend**: React, Styled Components, Gatsby
+- **Integration**: MetaMask Snaps API
 
-## Learn More
+## Customization
 
-You can learn more in the [Gatsby documentation](https://www.gatsbyjs.com/docs/).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The site's styling can be customized through the `src/config/theme.ts` file, allowing for easy branding adjustments.
