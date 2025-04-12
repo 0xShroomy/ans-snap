@@ -1,6 +1,6 @@
 {
   "name": "@hooded-hub/abstract-name-service-snap",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "MetaMask Snap to resolve .abs domain names from the Abstract Naming Service.",
   "keywords": [
     "ethereum",

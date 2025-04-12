@@ -275,13 +275,13 @@ const Index = () => {
 
       setResolveResult({
         domain,
-        address: result?.address || 'Not resolved',
-        record: result?.record || 'No record found',
+        address: result?.address ?? 'Not resolved',
+        record: result?.record ?? 'No record found',
       });
     } catch (domainError: any) {
       setResolveResult({
         domain,
-        error: domainError.message || 'Failed to resolve domain',
+        error: domainError.message ?? 'Failed to resolve domain',
       });
     } finally {
       setResolving(false);

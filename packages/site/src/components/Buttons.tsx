@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import type { ComponentProps, ButtonHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
@@ -90,7 +90,7 @@ export const InstallFlaskButton = () => (
   </Link>
 );
 
-export const ConnectButton = (props: ComponentProps<typeof Button>) => {
+export const ConnectButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <Button {...props}>
       <FlaskFox />
@@ -99,7 +99,7 @@ export const ConnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
-export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
+export const ReconnectButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <Button {...props}>
       <FlaskFox />
@@ -108,7 +108,7 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
-export const ResolveDomainButton = (props: ComponentProps<typeof Button>) => {
+export const ResolveDomainButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return <Button {...props}>Resolve Domain</Button>;
 };
 

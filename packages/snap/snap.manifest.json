@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Resolve .abs names from the Abstract Naming Service to Ethereum addresses",
   "proposedName": "Abstract Name Service Resolver",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/0xshroomy/ans-snap.git"
   },
   "source": {
-    "shasum": "Y+BcMqWGSfiJUrVmKjPm0yDtV6wMomFOYZ3EPgjClUk=",
+    "shasum": "NWsQNZ5n+czl9OrAM5A1VswgMDvWFU/9Dv6gpMcC72A=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
