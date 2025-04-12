@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals';
-import type { SnapConfirmationInterface } from '@metamask/snaps-jest';
+import type { SnapAlertInterface } from '@metamask/snaps-jest';
 import { installSnap } from '@metamask/snaps-jest';
 import { Box, Text, Bold } from '@metamask/snaps-sdk/jsx';
 
@@ -17,10 +17,10 @@ describe('onRpcRequest', () => {
         }
       });
 
-      // We just check that the interface is of confirmation type
+      // We just check that the interface is of alert type
       // since the exact content depends on blockchain responses
-      const ui = (await response.getInterface()) as SnapConfirmationInterface;
-      expect(ui.type).toBe('confirmation');
+      const ui = (await response.getInterface()) as SnapAlertInterface;
+      expect(ui.type).toBe('alert');
       
       await ui.ok();
       
