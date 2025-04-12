@@ -127,11 +127,25 @@ export const HeaderButtons = () => {
   }
 
   if (!installedSnap) {
-    return <ConnectButton onClick={() => { void requestSnap(); }} />;
+    return (
+      <ConnectButton
+        onClick={() => {
+          // Handle promise without using void
+          requestSnap().catch(console.error);
+        }}
+      />
+    );
   }
 
   if (shouldDisplayReconnectButton(installedSnap)) {
-    return <ReconnectButton onClick={() => { void requestSnap(); }} />;
+    return (
+      <ReconnectButton
+        onClick={() => {
+          // Handle promise without using void
+          requestSnap().catch(console.error);
+        }}
+      />
+    );
   }
 
   return (

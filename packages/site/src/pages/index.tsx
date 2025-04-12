@@ -344,7 +344,9 @@ const Index = () => {
                 'Get started by connecting to and installing the example snap.',
               button: (
                 <ConnectButton
-                  onClick={requestSnap}
+                  onClick={() => {
+                    requestSnap().catch(console.error);
+                  }}
                   disabled={!isMetaMaskReady}
                 />
               ),
@@ -360,7 +362,9 @@ const Index = () => {
                 'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
               button: (
                 <ReconnectButton
-                  onClick={requestSnap}
+                  onClick={() => {
+                    requestSnap().catch(console.error);
+                  }}
                   disabled={!installedSnap}
                 />
               ),
@@ -415,7 +419,8 @@ const Index = () => {
                 />
                 <ResolveButton
                   onClick={() => {
-                    void handleResolveDomain();
+                    // Handle promise without using void
+                    handleResolveDomain().catch(console.error);
                   }}
                   disabled={!installedSnap || !domainInput || resolving}
                 >
