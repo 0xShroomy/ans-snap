@@ -26,6 +26,7 @@ yarn test
 ## Development
 
 Built with:
+
 - TypeScript
 - MetaMask Snaps SDK
 - Ethers.js for blockchain interactions
