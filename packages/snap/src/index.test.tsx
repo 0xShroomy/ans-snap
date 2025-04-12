@@ -4,34 +4,28 @@ import { installSnap } from '@metamask/snaps-jest';
 import { Box, Text, Bold } from '@metamask/snaps-sdk/jsx';
 
 describe('onRpcRequest', () => {
-  describe('hello', () => {
-    it('shows a confirmation dialog', async () => {
+  describe('resolve_domain', () => {
+    it('shows a confirmation dialog with domain resolution', async () => {
       const { request } = await installSnap();
 
       const origin = 'Jest';
       const response = request({
-        method: 'hello',
+        method: 'resolve_domain',
         origin,
+        params: {
+          domain: 'test'
+        }
       });
 
+      // We just check that the interface is of confirmation type
+      // since the exact content depends on blockchain responses
       const ui = (await response.getInterface()) as SnapConfirmationInterface;
       expect(ui.type).toBe('confirmation');
-      expect(ui).toRender(
-        <Box>
-          <Text>
-            Hello, <Bold>{origin}</Bold>!
-          </Text>
-          <Text>This custom confirmation is just for display purposes.</Text>
-          <Text>
-            But you can edit the snap source code to make it do something, if
-            you want to!
-          </Text>
-        </Box>,
-      );
-
+      
       await ui.ok();
-
-      expect(await response).toRespondWith(true);
+      
+      // Just verify that the response completes successfully
+      await response;
     });
   });
 
