@@ -2,11 +2,6 @@
   "name": "@hooded-hub/abstract-name-service-snap",
   "version": "0.1.0",
   "description": "MetaMask Snap to resolve .abs domain names from the Abstract Naming Service.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/0xshroomy/ans-snap.git"
-  },
-  "author": "Hooded Hub",
   "keywords": [
     "ethereum",
     "metamask",
@@ -16,7 +11,12 @@
     "ans",
     "domain-resolution"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xshroomy/ans-snap.git"
+  },
   "license": "(MIT-0 OR Apache-2.0)",
+  "author": "Hooded Hub",
   "main": "./dist/bundle.js",
   "files": [
     "dist/",

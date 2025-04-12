@@ -11,6 +11,7 @@ https://snaps.metamask.io/snap/npm/@hooded-hub/abstract-name-service-snap/
 ## What It Does
 
 This Snap allows MetaMask users to:
+
 - Send transactions directly to `.abs` domain names instead of Ethereum addresses
 - See resolved addresses in transaction insights
 - Look up records associated with domain names
@@ -59,5 +60,3 @@ yarn start
 ```shell
 yarn install && yarn start
 ```
-
-

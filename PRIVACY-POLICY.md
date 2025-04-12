@@ -1,6 +1,6 @@
 # Privacy Policy for Abstract Name Service (ANS) Resolver Snap
 
-*Last Updated: April 12, 2025*
+_Last Updated: April 12, 2025_
 
 ## Introduction
 
