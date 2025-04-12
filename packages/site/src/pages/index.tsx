@@ -415,7 +415,6 @@ const Index = () => {
                 />
                 <ResolveButton
                   onClick={() => {
-                    // eslint-disable-next-line no-void
                     void handleResolveDomain();
                   }}
                   disabled={!installedSnap || !domainInput || resolving}
@@ -466,7 +465,7 @@ const Index = () => {
               button: (
                 <ResolveDomainButton
                   onClick={() => {
-                    /* Disabled button - no action needed */
+                    // Empty function with no async operations
                   }}
                   disabled={true}
                 />

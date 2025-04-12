@@ -1,4 +1,4 @@
-import type { ComponentProps, ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
@@ -90,7 +90,9 @@ export const InstallFlaskButton = () => (
   </Link>
 );
 
-export const ConnectButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
+export const ConnectButton = (
+  props: ButtonHTMLAttributes<HTMLButtonElement>,
+) => {
   return (
     <Button {...props}>
       <FlaskFox />
@@ -99,7 +101,9 @@ export const ConnectButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) =>
   );
 };
 
-export const ReconnectButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
+export const ReconnectButton = (
+  props: ButtonHTMLAttributes<HTMLButtonElement>,
+) => {
   return (
     <Button {...props}>
       <FlaskFox />
@@ -108,7 +112,9 @@ export const ReconnectButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) 
   );
 };
 
-export const ResolveDomainButton = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
+export const ResolveDomainButton = (
+  props: ButtonHTMLAttributes<HTMLButtonElement>,
+) => {
   return <Button {...props}>Resolve Domain</Button>;
 };
 
@@ -121,11 +127,11 @@ export const HeaderButtons = () => {
   }
 
   if (!installedSnap) {
-    return <ConnectButton onClick={requestSnap} />;
+    return <ConnectButton onClick={() => { void requestSnap(); }} />;
   }
 
   if (shouldDisplayReconnectButton(installedSnap)) {
-    return <ReconnectButton onClick={requestSnap} />;
+    return <ReconnectButton onClick={() => { void requestSnap(); }} />;
   }
 
   return (

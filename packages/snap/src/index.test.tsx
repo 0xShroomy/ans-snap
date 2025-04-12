@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals';
 import type { SnapAlertInterface } from '@metamask/snaps-jest';
 import { installSnap } from '@metamask/snaps-jest';
-import { Box, Text, Bold } from '@metamask/snaps-sdk/jsx';
+// No JSX components needed for this test
 
 describe('onRpcRequest', () => {
   describe('resolve_domain', () => {
@@ -13,17 +13,17 @@ describe('onRpcRequest', () => {
         method: 'resolve_domain',
         origin,
         params: {
-          domain: 'test'
-        }
+          domain: 'test',
+        },
       });
 
       // We just check that the interface is of alert type
       // since the exact content depends on blockchain responses
       const ui = (await response.getInterface()) as SnapAlertInterface;
       expect(ui.type).toBe('alert');
-      
+
       await ui.ok();
-      
+
       // Just verify that the response completes successfully
       await response;
     });
