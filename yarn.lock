@@ -3183,8 +3183,8 @@ __metadata:
   linkType: hard
 
 "@metamask/snaps-execution-environments@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@metamask/snaps-execution-environments@npm:7.2.0"
+  version: 7.2.1
+  resolution: "@metamask/snaps-execution-environments@npm:7.2.1"
   dependencies:
     "@metamask/json-rpc-engine": ^10.0.2
     "@metamask/object-multiplex": ^2.1.0
@@ -3197,7 +3197,7 @@ __metadata:
     "@metamask/utils": ^11.2.0
     nanoid: ^3.3.10
     readable-stream: ^3.6.2
-  checksum: f96abb5bd161fe123bb0b71641a1dfbedc8cf5a346ca4ed1e214a292f171cf8d68a9cacc39670f4f304406d63c69ee8d428baeeb6cfcb786971b30dfcc1244c4
+  checksum: 92d637f000e6311adf928e8a18d0c72dd0b00371248cc10bfddf4c26e83250e13fbac46f04eb6be8dea853bc5b5b3f47e85b182e3a2d26ef38afae99cb399f6e
   languageName: node
   linkType: hard
 
