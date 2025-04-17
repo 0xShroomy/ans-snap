@@ -3142,8 +3142,8 @@ __metadata:
   linkType: hard
 
 "@metamask/snaps-controllers@npm:^11.2.0":
-  version: 11.2.0
-  resolution: "@metamask/snaps-controllers@npm:11.2.0"
+  version: 11.2.1
+  resolution: "@metamask/snaps-controllers@npm:11.2.1"
   dependencies:
     "@metamask/approval-controller": ^7.1.3
     "@metamask/base-controller": ^8.0.0
@@ -3174,11 +3174,11 @@ __metadata:
     semver: ^7.5.4
     tar-stream: ^3.1.7
   peerDependencies:
-    "@metamask/snaps-execution-environments": ^7.2.0
+    "@metamask/snaps-execution-environments": ^7.2.1
   peerDependenciesMeta:
     "@metamask/snaps-execution-environments":
       optional: true
-  checksum: 178e2af07a75e5dd9ff09e9b925e4bdc3faa83817f7363420d982dacf963791b86f7eb615a054db1fad6d6b0244af6394fdd840e6b38cdc226c115a09b69dd46
+  checksum: 77c044ab02ed3c01dd587b9e48693f6aaa42dc7135f60bc3efc988c62171078cecb69ba8ea2b73f7d1db413345811ef528afdd51a55fd68e617136a292eac1b8
   languageName: node
   linkType: hard
 
