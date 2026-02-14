@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "description": "",
-  "homepage": "https://github.com/ans/ans-snap#readme",
+  "homepage": "https://github.com/0xShroomy/ans-snap#readme",
   "bugs": {
-    "url": "https://github.com/ans/ans-snap/issues"
+    "url": "https://github.com/0xShroomy/ans-snap/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ans/ans-snap.git"
+    "url": "git+https://github.com/0xShroomy/ans-snap.git"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "author": "",

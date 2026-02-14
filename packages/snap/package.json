@@ -4,7 +4,7 @@
   "description": "MetaMask name resolution Snap for ANS (.abs) using ANSv2 on Abstract.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ans/ans-snap.git"
+    "url": "https://github.com/0xShroomy/ans-snap.git"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "./dist/bundle.js",
