@@ -80,3 +80,4 @@ node_modules/
 
 # Local Node runtime for development (do not commit)
 .local/node/
+.vercel
