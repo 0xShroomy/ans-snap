@@ -7,7 +7,7 @@
     "url": "git+https://github.com/0xShroomy/ans-snap.git"
   },
   "source": {
-    "shasum": "m6sVKPU3YDiDfpUIUJ1DTcL2nEwX+fmDLKqtFRdkS/Y=",
+    "shasum": "8NGgGCDgnf5U2VZvXFbcmsKfwJmeMsPu+yyLOES54UQ=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
