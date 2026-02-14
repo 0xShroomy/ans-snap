@@ -1,0 +1,30 @@
+{
+  "version": "0.1.0",
+  "description": "Resolve .abs names (ANS V2) directly inside MetaMask.",
+  "proposedName": "ANS | Abstract Name Service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+  },
+  "source": {
+    "shasum": "02RTTfr2nVAdNiyGxt4l44+3RKPfeEww+b9zNGZa7iU=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "packageName": "snap",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "endowment:ethereum-provider": {},
+    "endowment:name-lookup": {
+      "chains": ["eip155:2741"],
+      "matchers": {
+        "tlds": ["abs"]
+      }
+    }
+  },
+  "platformVersion": "10.3.0",
+  "manifestVersion": "0.1"
+}
