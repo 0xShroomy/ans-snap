@@ -1,0 +1,8 @@
+{
+  "installCommand": "yarn install --immutable",
+  "buildCommand": "yarn workspace site build",
+  "outputDirectory": "packages/site/public",
+  "env": {
+    "GATSBY_SNAP_ORIGIN": "npm:@ans-abstract-name-service/ans-snap"
+  }
+}

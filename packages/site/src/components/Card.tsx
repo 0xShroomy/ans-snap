@@ -18,7 +18,7 @@ const CardWrapper = styled.div<{
   display: flex;
   flex-direction: column;
   width: ${({ fullWidth }) => (fullWidth ? '100%' : '250px')};
-  background-color: ${({ theme }) => theme.colors.card?.default};
+  background: ${({ theme }) => theme.colors.card?.default};
   margin-top: 2.4rem;
   margin-bottom: 2.4rem;
   padding: 2.4rem;
@@ -27,6 +27,19 @@ const CardWrapper = styled.div<{
   box-shadow: ${({ theme }) => theme.shadows.default};
   filter: opacity(${({ disabled }) => (disabled ? '.4' : '1')});
   align-self: stretch;
+  backdrop-filter: blur(14px);
+
+  ${({ disabled }) =>
+    disabled
+      ? ''
+      : `
+    &:hover {
+      transform: translateY(-1px);
+    }
+  `}
+
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+
   ${({ theme }) => theme.mediaQueries.small} {
     width: 100%;
     margin-top: 1.2rem;
@@ -38,6 +51,7 @@ const CardWrapper = styled.div<{
 const Title = styled.h2`
   font-size: ${({ theme }) => theme.fontSizes.large};
   margin: 0;
+  letter-spacing: -0.02em;
   ${({ theme }) => theme.mediaQueries.small} {
     font-size: ${({ theme }) => theme.fontSizes.text};
   }

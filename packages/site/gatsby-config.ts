@@ -10,11 +10,14 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'Template Snap',
-        icon: 'src/assets/logo.svg',
+        name: 'Abstract Name Service Snap',
         /* eslint-disable @typescript-eslint/naming-convention */
-        theme_color: '#6F4CFF',
-        background_color: '#FFFFFF',
+        short_name: 'ANS Snap',
+        description:
+          'Install the ANS MetaMask Snap to resolve .abs names on Abstract.',
+        icon: 'src/assets/ans-icon.svg',
+        theme_color: '#1cd47e',
+        background_color: '#0b0f10',
         /* eslint-enable @typescript-eslint/naming-convention */
         display: 'standalone',
       },

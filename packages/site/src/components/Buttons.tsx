@@ -12,7 +12,7 @@ const Link = styled.a`
   justify-content: center;
   font-size: ${(props) => props.theme.fontSizes.small};
   border-radius: ${(props) => props.theme.radii.button};
-  border: 1px solid ${(props) => props.theme.colors.background?.inverse};
+  border: 1px solid ${(props) => props.theme.colors.border?.default};
   background-color: ${(props) => props.theme.colors.background?.inverse};
   color: ${(props) => props.theme.colors.text?.inverse};
   text-decoration: none;
@@ -20,10 +20,11 @@ const Link = styled.a`
   padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  box-shadow: ${(props) => props.theme.shadows.button};
 
   &:hover {
     background-color: transparent;
-    border: 1px solid ${(props) => props.theme.colors.background?.inverse};
+    border: 1px solid ${(props) => props.theme.colors.border?.default};
     color: ${(props) => props.theme.colors.text?.default};
   }
 
@@ -55,11 +56,12 @@ const ConnectedContainer = styled.div`
   justify-content: center;
   font-size: ${(props) => props.theme.fontSizes.small};
   border-radius: ${(props) => props.theme.radii.button};
-  border: 1px solid ${(props) => props.theme.colors.background?.inverse};
+  border: 1px solid ${(props) => props.theme.colors.border?.default};
   background-color: ${(props) => props.theme.colors.background?.inverse};
   color: ${(props) => props.theme.colors.text?.inverse};
   font-weight: bold;
   padding: 1.2rem;
+  box-shadow: ${(props) => props.theme.shadows.button};
 `;
 
 const ConnectedIndicator = styled.div`
@@ -67,7 +69,7 @@ const ConnectedIndicator = styled.div`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: green;
+  background-color: ${(props) => props.theme.colors.primary?.default};
 `;
 
 export const InstallFlaskButton = () => (

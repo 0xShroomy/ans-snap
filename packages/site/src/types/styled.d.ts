@@ -8,6 +8,7 @@ import 'styled-components';
 declare module 'styled-components' {
   /* eslint-disable @typescript-eslint/consistent-type-definitions */
   export interface DefaultTheme {
+    mode: 'light' | 'dark';
     fonts: Record<string, string>;
     fontSizes: Record<string, string>;
     breakpoints: string[];
