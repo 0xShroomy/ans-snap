@@ -1,11 +1,20 @@
 {
   "name": "@ans-abstract-name-service/ans-snap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MetaMask name resolution Snap for ANS (.abs) using ANSv2 on Abstract.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xShroomy/ans-snap.git"
+    "url": "git+https://github.com/0xShroomy/ans-snap.git"
   },
+  "keywords": [
+    "metamask",
+    "snap",
+    "snaps",
+    "ans",
+    "abstract",
+    "name-service",
+    "resolver"
+  ],
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "./dist/bundle.js",
   "files": [
