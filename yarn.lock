@@ -14104,6 +14104,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:^0.542.0":
+  version: 0.542.0
+  resolution: "lucide-react@npm:0.542.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 779e426ef3473e6a56bbc627c945d8fb6fb98039ff6b731b66e60f1af5240aac5fcb16cae3a348ffc11f023a47e7f3f212ddc49e16548f2e47bd24e6f71c4ce4
+  languageName: node
+  linkType: hard
+
 "luxon@npm:^3.1.0, luxon@npm:^3.5.0":
   version: 3.5.0
   resolution: "luxon@npm:3.5.0"
@@ -17863,6 +17872,7 @@ __metadata:
     gatsby-plugin-manifest: ^5.14.0
     gatsby-plugin-postcss: ^6.15.0
     gatsby-plugin-svgr: ^3.0.0-beta.0
+    lucide-react: ^0.542.0
     postcss: ^8.5.3
     react: ^18.2.0
     react-dom: ^18.2.0
