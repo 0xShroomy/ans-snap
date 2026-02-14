@@ -8,4 +8,5 @@
  */
 export const defaultSnapOrigin =
   // eslint-disable-next-line no-restricted-globals
-  process.env.SNAP_ORIGIN ?? `local:http://localhost:8080`;
+  // Gatsby only exposes env vars prefixed with `GATSBY_` to client bundles.
+  process.env.GATSBY_SNAP_ORIGIN ?? `local:http://localhost:8080`;
