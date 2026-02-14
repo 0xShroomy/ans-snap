@@ -16,7 +16,8 @@ Key folders:
 ## Getting Started
 
 ```shell
-yarn --version
+nvm use
+corepack enable
 yarn install && yarn start
 ```
 
