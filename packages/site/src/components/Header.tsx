@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { HeaderButtons } from './Buttons';
 import { Toggle } from './Toggle';
+import { getThemePreference } from '../utils';
 
 type Props = {
   handleToggleClick: () => void;
@@ -64,7 +65,10 @@ export const Header = ({ handleToggleClick }: Props) => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Toggle onToggle={handleToggleClick} defaultChecked={false} />
+          <Toggle
+            onToggle={handleToggleClick}
+            defaultChecked={getThemePreference()}
+          />
           <HeaderButtons />
 
           <button
