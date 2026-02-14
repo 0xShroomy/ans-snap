@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-jsdoc */
+
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 
@@ -22,8 +24,8 @@ type EthereumRequest = (args: {
 
 declare const ethereum: { request: EthereumRequest };
 
-function strip0x(hex: string): string {
-  return hex.startsWith('0x') ? hex.slice(2) : hex;
+function strip0x(hexString: string): string {
+  return hexString.startsWith('0x') ? hexString.slice(2) : hexString;
 }
 
 function pad32(hexWithout0x: string): string {
@@ -42,8 +44,8 @@ function bytesToHex(bytes: Uint8Array): string {
   return out;
 }
 
-function hexToBytes(hex: string): Uint8Array {
-  const clean = strip0x(hex);
+function hexToBytes(hexString: string): Uint8Array {
+  const clean = strip0x(hexString);
   if (clean.length % 2 !== 0) {
     throw new Error('Invalid hex string.');
   }
@@ -100,7 +102,10 @@ function encodeStringArg(value: string): string {
   const len = bigIntToWord(BigInt(bytes.length));
 
   const dataHex = bytesToHex(bytes);
-  const paddedDataHex = dataHex.padEnd(Math.ceil(dataHex.length / 64) * 64, '0');
+  const paddedDataHex = dataHex.padEnd(
+    Math.ceil(dataHex.length / 64) * 64,
+    '0',
+  );
   return `${head}${len}${paddedDataHex}`;
 }
 
@@ -116,18 +121,24 @@ function encodeCall(selector: string, encodedArgsWithout0x: string): string {
 }
 
 function isHexAddress(value: string): value is `0x${string}` {
-  return /^0x[a-fA-F0-9]{40}$/.test(value);
+  return /^0x[a-f0-9]{40}$/iu.test(value);
 }
 
 function normalizeNamePartFromDomain(domain: string): string | null {
   const trimmed = domain.trim();
-  if (!trimmed) return null;
+  if (!trimmed) {
+    return null;
+  }
 
   const lower = trimmed.toLowerCase();
-  if (!lower.endsWith('.abs')) return null;
+  if (!lower.endsWith('.abs')) {
+    return null;
+  }
 
   const namePart = lower.slice(0, -4); // remove ".abs"
-  if (!namePart || namePart.endsWith('.')) return null;
+  if (!namePart || namePart.endsWith('.')) {
+    return null;
+  }
 
   // Contract normalizes by ASCII-lowercasing only. Here we already lowercased,
   // so we just return it.
@@ -151,17 +162,25 @@ export async function resolveAbsDomainToAddress(
   domain: string,
 ): Promise<{ address: string; domainName: string } | null> {
   const contract = ANS_V2_CONTRACT_BY_CHAIN[chainId];
-  if (!contract) return null;
+  if (!contract) {
+    return null;
+  }
 
   const namePart = normalizeNamePartFromDomain(domain);
-  if (!namePart) return null;
+  if (!namePart) {
+    return null;
+  }
 
   const ownerData = encodeCall(
     SELECTOR_DOMAINS_STRING,
     encodeStringArg(namePart),
   );
-  const owner = decodeAddressReturn(await ethCall(contract, ownerData)).toLowerCase();
-  if (owner === ZERO_ADDRESS || owner === DEAD_ADDRESS) return null;
+  const owner = decodeAddressReturn(
+    await ethCall(contract, ownerData),
+  ).toLowerCase();
+  if (owner === ZERO_ADDRESS || owner === DEAD_ADDRESS) {
+    return null;
+  }
 
   const recordData = encodeCall(
     SELECTOR_RECORDS_STRING,
@@ -178,8 +197,12 @@ export async function reverseLookupAbsDomain(
   address: string,
 ): Promise<string | null> {
   const contract = ANS_V2_CONTRACT_BY_CHAIN[chainId];
-  if (!contract) return null;
-  if (!isHexAddress(address)) return null;
+  if (!contract) {
+    return null;
+  }
+  if (!isHexAddress(address)) {
+    return null;
+  }
 
   const data = encodeCall(
     SELECTOR_GET_NAME_BY_ADDRESS,
@@ -191,4 +214,3 @@ export async function reverseLookupAbsDomain(
 
   return namePart ? `${namePart}.abs` : null;
 }
-

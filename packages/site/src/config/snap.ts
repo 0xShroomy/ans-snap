@@ -7,6 +7,6 @@
  * there. Running `yarn build` will automatically use the production environment variables.
  */
 export const defaultSnapOrigin =
-  // eslint-disable-next-line no-restricted-globals
   // Gatsby only exposes env vars prefixed with `GATSBY_` to client bundles.
+  // eslint-disable-next-line no-restricted-globals
   process.env.GATSBY_SNAP_ORIGIN ?? `local:http://localhost:8080`;

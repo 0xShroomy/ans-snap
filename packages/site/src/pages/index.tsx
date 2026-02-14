@@ -1,17 +1,13 @@
 import styled from 'styled-components';
 
 import {
+  Card,
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  Card,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
-import {
-  useMetaMask,
-  useMetaMaskContext,
-  useRequestSnap,
-} from '../hooks';
+import { useMetaMask, useMetaMaskContext, useRequestSnap } from '../hooks';
 import { isLocalSnap, shouldDisplayReconnectButton } from '../utils';
 
 const Container = styled.div`
@@ -137,8 +133,7 @@ const Index = () => {
           <Card
             content={{
               title: 'Connect',
-              description:
-                'Connect to MetaMask and install the ANS Snap.',
+              description: 'Connect to MetaMask and install the ANS Snap.',
               button: (
                 <ConnectButton
                   onClick={requestSnap}
@@ -166,9 +161,7 @@ const Index = () => {
           />
         )}
         <Notice>
-          <p>
-            Testing:
-          </p>
+          <p>Testing:</p>
           <p>
             1) Switch MetaMask to the <b>Abstract</b> network.
           </p>

@@ -7,7 +7,9 @@ const PROTOCOL = 'ANS';
 export const onNameLookup: OnNameLookupHandler = async (args) => {
   if ('domain' in args) {
     const result = await resolveAbsDomainToAddress(args.chainId, args.domain);
-    if (!result) return null;
+    if (!result) {
+      return null;
+    }
 
     return {
       resolvedAddresses: [
@@ -20,8 +22,13 @@ export const onNameLookup: OnNameLookupHandler = async (args) => {
     };
   }
 
-  const resolvedDomain = await reverseLookupAbsDomain(args.chainId, args.address);
-  if (!resolvedDomain) return null;
+  const resolvedDomain = await reverseLookupAbsDomain(
+    args.chainId,
+    args.address,
+  );
+  if (!resolvedDomain) {
+    return null;
+  }
 
   return {
     resolvedDomains: [
@@ -32,4 +39,3 @@ export const onNameLookup: OnNameLookupHandler = async (args) => {
     ],
   };
 };
-
