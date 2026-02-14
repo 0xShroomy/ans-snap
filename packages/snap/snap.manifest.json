@@ -4,14 +4,14 @@
   "proposedName": "ANS | Abstract Name Service",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/ans/ans-snap.git"
   },
   "source": {
     "shasum": "vicwah932xCb3TqCPzWW2QPGWi3AaveZ0QaHfesJLco=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "packageName": "snap",
+        "packageName": "@ans/ans-snap",
         "iconPath": "images/icon.svg",
         "registry": "https://registry.npmjs.org/"
       }

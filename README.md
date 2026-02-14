@@ -10,12 +10,13 @@ Key folders:
 
 ## Requirements
 
-- Node.js 20+ (the MetaMask Snap toolchain uses modern Node features)
+- Node.js 25.2.1 (via `nvm use` using `.nvmrc`)
 - Yarn (via Corepack)
 
 ## Getting Started
 
 ```shell
+yarn --version
 yarn install && yarn start
 ```
 

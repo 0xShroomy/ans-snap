@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "description": "",
-  "homepage": "https://github.com/MetaMask/template-snap-monorepo#readme",
+  "homepage": "https://github.com/ans/ans-snap#readme",
   "bugs": {
-    "url": "https://github.com/MetaMask/template-snap-monorepo/issues"
+    "url": "https://github.com/ans/ans-snap/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "git+https://github.com/ans/ans-snap.git"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "author": "",
@@ -23,7 +23,7 @@
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '**/*.yml' '!.yarnrc.yml' --ignore-path .gitignore --no-error-on-unmatched-pattern",
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
-    "test": "yarn workspace snap run test"
+    "test": "yarn workspace @ans/ans-snap run test"
   },
   "resolutions": {
     "cookie": "^0.7.1",
