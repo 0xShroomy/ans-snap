@@ -1,18 +1,8 @@
 import type { FunctionComponent, ReactNode } from 'react';
 import { useContext } from 'react';
-import styled from 'styled-components';
 
 import { Footer, Header } from './components';
-import { GlobalStyle } from './config/theme';
 import { ToggleThemeContext } from './Root';
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  max-width: 100vw;
-`;
 
 export type AppProps = {
   children: ReactNode;
@@ -23,12 +13,11 @@ export const App: FunctionComponent<AppProps> = ({ children }) => {
 
   return (
     <>
-      <GlobalStyle />
-      <Wrapper>
+      <div className="relative z-0 flex min-h-screen w-full flex-col">
         <Header handleToggleClick={toggleTheme} />
-        {children}
+        <div className="flex-1">{children}</div>
         <Footer />
-      </Wrapper>
+      </div>
     </>
   );
 };

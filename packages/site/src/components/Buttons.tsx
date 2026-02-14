@@ -1,105 +1,67 @@
-import type { ComponentProps } from 'react';
-import styled from 'styled-components';
+import type { ComponentProps, ReactNode } from 'react';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
 import { useMetaMask, useRequestSnap } from '../hooks';
 import { shouldDisplayReconnectButton } from '../utils';
 
-const Link = styled.a`
-  display: flex;
-  align-self: flex-start;
-  align-items: center;
-  justify-content: center;
-  font-size: ${(props) => props.theme.fontSizes.small};
-  border-radius: ${(props) => props.theme.radii.button};
-  border: 1px solid ${(props) => props.theme.colors.border?.default};
-  background-color: ${(props) => props.theme.colors.background?.inverse};
-  color: ${(props) => props.theme.colors.text?.inverse};
-  text-decoration: none;
-  font-weight: bold;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: ${(props) => props.theme.shadows.button};
-
-  &:hover {
-    background-color: transparent;
-    border: 1px solid ${(props) => props.theme.colors.border?.default};
-    color: ${(props) => props.theme.colors.text?.default};
-  }
-
-  ${({ theme }) => theme.mediaQueries.small} {
-    width: 100%;
-    box-sizing: border-box;
-  }
-`;
-
-const Button = styled.button`
-  display: flex;
-  align-self: flex-start;
-  align-items: center;
-  justify-content: center;
-  margin-top: auto;
-  ${({ theme }) => theme.mediaQueries.small} {
-    width: 100%;
-  }
-`;
-
-const ButtonText = styled.span`
-  margin-left: 1rem;
-`;
-
-const ConnectedContainer = styled.div`
-  display: flex;
-  align-self: flex-start;
-  align-items: center;
-  justify-content: center;
-  font-size: ${(props) => props.theme.fontSizes.small};
-  border-radius: ${(props) => props.theme.radii.button};
-  border: 1px solid ${(props) => props.theme.colors.border?.default};
-  background-color: ${(props) => props.theme.colors.background?.inverse};
-  color: ${(props) => props.theme.colors.text?.inverse};
-  font-weight: bold;
-  padding: 1.2rem;
-  box-shadow: ${(props) => props.theme.shadows.button};
-`;
-
-const ConnectedIndicator = styled.div`
-  content: ' ';
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: ${(props) => props.theme.colors.primary?.default};
-`;
-
-export const InstallFlaskButton = () => (
-  <Link href="https://metamask.io/flask/" target="_blank">
-    <FlaskFox />
-    <ButtonText>Install MetaMask Flask</ButtonText>
-  </Link>
+const PrimaryButton = ({
+  children,
+  ...props
+}: ComponentProps<'button'> & { children: ReactNode }) => (
+  <button
+    {...props}
+    className={[
+      'inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold',
+      'bg-primary text-primary-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md',
+      'disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm',
+      props.className ?? '',
+    ].join(' ')}
+  >
+    {children}
+  </button>
 );
 
-export const ConnectButton = (props: ComponentProps<typeof Button>) => {
-  return (
-    <Button {...props}>
-      <FlaskFox />
-      <ButtonText>Connect</ButtonText>
-    </Button>
-  );
-};
+const SecondaryLink = ({
+  children,
+  ...props
+}: ComponentProps<'a'> & { children: ReactNode }) => (
+  <a
+    {...props}
+    className={[
+      'inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold',
+      'border border-border/70 bg-card/80 text-foreground shadow-sm backdrop-blur',
+      'transition-all hover:-translate-y-0.5 hover:shadow-md',
+      props.className ?? '',
+    ].join(' ')}
+  >
+    {children}
+  </a>
+);
 
-export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
-  return (
-    <Button {...props}>
-      <FlaskFox />
-      <ButtonText>Reconnect</ButtonText>
-    </Button>
-  );
-};
+export const InstallFlaskButton = () => (
+  <SecondaryLink
+    href="https://metamask.io/flask/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <FlaskFox />
+    Install MetaMask Flask
+  </SecondaryLink>
+);
 
-export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Send message</Button>;
-};
+export const ConnectButton = (props: ComponentProps<'button'>) => (
+  <PrimaryButton {...props}>
+    <FlaskFox />
+    Connect
+  </PrimaryButton>
+);
+
+export const ReconnectButton = (props: ComponentProps<'button'>) => (
+  <PrimaryButton {...props}>
+    <FlaskFox />
+    Reconnect
+  </PrimaryButton>
+);
 
 export const HeaderButtons = () => {
   const requestSnap = useRequestSnap();
@@ -110,17 +72,29 @@ export const HeaderButtons = () => {
   }
 
   if (!installedSnap) {
-    return <ConnectButton onClick={requestSnap} />;
+    return (
+      <ConnectButton
+        onClick={() => {
+          requestSnap().catch(() => undefined);
+        }}
+      />
+    );
   }
 
   if (shouldDisplayReconnectButton(installedSnap)) {
-    return <ReconnectButton onClick={requestSnap} />;
+    return (
+      <ReconnectButton
+        onClick={() => {
+          requestSnap().catch(() => undefined);
+        }}
+      />
+    );
   }
 
   return (
-    <ConnectedContainer>
-      <ConnectedIndicator />
-      <ButtonText>Connected</ButtonText>
-    </ConnectedContainer>
+    <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/80 px-4 py-2 text-sm font-bold text-foreground shadow-sm backdrop-blur">
+      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+      Connected
+    </div>
   );
 };

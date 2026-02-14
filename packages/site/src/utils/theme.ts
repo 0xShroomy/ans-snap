@@ -11,16 +11,11 @@ export const getThemePreference = () => {
     return false;
   }
 
-  const darkModeSystem = window?.matchMedia(
-    '(prefers-color-scheme: dark)',
-  ).matches;
-
   const localStoragePreference = getLocalStorage('theme');
-  const systemPreference = darkModeSystem ? 'dark' : 'light';
-  const preference = localStoragePreference ?? systemPreference;
+  const preference = localStoragePreference ?? 'light';
 
   if (!localStoragePreference) {
-    setLocalStorage('theme', systemPreference);
+    setLocalStorage('theme', 'light');
   }
 
   return preference === 'dark';

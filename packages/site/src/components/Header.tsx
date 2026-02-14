@@ -1,131 +1,114 @@
-import styled, { useTheme } from 'styled-components';
+import { useMemo, useState } from 'react';
 
 import { HeaderButtons } from './Buttons';
-import { SnapLogo } from './SnapLogo';
 import { Toggle } from './Toggle';
-import { getThemePreference } from '../utils';
 
-const HeaderWrapper = styled.header`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.6rem 2.4rem;
-  border-bottom: 1px solid ${(props) => props.theme.colors.border?.default};
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: ${(props) => props.theme.colors.background?.alternative};
-  backdrop-filter: blur(14px);
-`;
-
-const Brand = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const Title = styled.p`
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin: 0;
-  letter-spacing: -0.01em;
-  line-height: 1;
-  ${({ theme }) => theme.mediaQueries.small} {
-    font-size: 1.35rem;
-  }
-`;
-
-const Tagline = styled.p`
-  margin: 0;
-  color: ${(props) => props.theme.colors.text?.muted};
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  ${({ theme }) => theme.mediaQueries.small} {
-    display: none;
-  }
-`;
-
-const RightContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1.2rem;
-`;
-
-const Nav = styled.nav`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1.2rem;
-  ${({ theme }) => theme.mediaQueries.small} {
-    display: none;
-  }
-`;
-
-const NavLink = styled.a`
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 1.3rem;
-  color: ${(props) => props.theme.colors.text?.muted};
-  padding: 0.6rem 0.8rem;
-  border-radius: 999px;
-  border: 1px solid transparent;
-
-  &:hover {
-    color: ${(props) => props.theme.colors.text?.default};
-    border: 1px solid ${(props) => props.theme.colors.border?.default};
-  }
-`;
-
-export const Header = ({
-  handleToggleClick,
-}: {
+type Props = {
   handleToggleClick: () => void;
-}) => {
-  const theme = useTheme();
+};
+
+const navItems: { label: string; href: string; external?: boolean }[] = [
+  { label: 'Features', href: '#features' },
+  { label: 'Ecosystem', href: '#ecosystem' },
+  { label: 'FAQ', href: '#faq' },
+  { label: 'Docs', href: 'https://absnameservice.com/docs', external: true },
+  { label: 'Abstract', href: 'https://abs.xyz', external: true },
+];
+
+export const Header = ({ handleToggleClick }: Props) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const items = useMemo(() => navItems, []);
 
   return (
-    <HeaderWrapper>
-      <Brand>
-        <SnapLogo color={theme.colors.primary?.default} size={34} />
-        <div>
-          <Title>Abstract Name Service Snap</Title>
-          <Tagline>Resolve .abs names on Abstract</Tagline>
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-card/80 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-8">
+        <div className="flex items-center gap-6">
+          <a href="/" className="flex items-center gap-2.5">
+            {/* Gatsby static folder: /static/logo.png becomes /logo.png */}
+            <img
+              src="/logo.png"
+              alt="ANS Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <span className="font-display text-lg font-semibold text-foreground">
+              ANS
+            </span>
+          </a>
+
+          <nav className="hidden items-center gap-1 md:flex">
+            {items.map((item) =>
+              item.external ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  {item.label}
+                </a>
+              ),
+            )}
+          </nav>
         </div>
-      </Brand>
-      <RightContainer>
-        <Nav>
-          <NavLink
-            href="https://absnameservice.com"
-            target="_blank"
-            rel="noreferrer"
+
+        <div className="flex items-center gap-3">
+          <Toggle onToggle={handleToggleClick} defaultChecked={false} />
+          <HeaderButtons />
+
+          <button
+            type="button"
+            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/80 text-foreground shadow-sm"
+            aria-label="Open menu"
+            onClick={() => setMobileOpen((value) => !value)}
           >
-            Main site
-          </NavLink>
-          <NavLink
-            href="https://github.com/0xShroomy/ans-snap"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </NavLink>
-          <NavLink
-            href="https://www.npmjs.com/package/@ans-abstract-name-service/ans-snap"
-            target="_blank"
-            rel="noreferrer"
-          >
-            npm
-          </NavLink>
-        </Nav>
-        <Toggle
-          onToggle={handleToggleClick}
-          defaultChecked={getThemePreference()}
-        />
-        <HeaderButtons />
-      </RightContainer>
-    </HeaderWrapper>
+            <span className="text-lg font-bold">{mobileOpen ? '×' : '≡'}</span>
+          </button>
+        </div>
+      </div>
+
+      {mobileOpen && (
+        <div className="border-t border-border/60 bg-card/80 backdrop-blur-xl md:hidden">
+          <div className="mx-auto max-w-7xl px-4 py-3">
+            <nav className="flex flex-col gap-1">
+              {items.map((item) =>
+                item.external ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ),
+              )}
+            </nav>
+          </div>
+        </div>
+      )}
+    </header>
   );
 };

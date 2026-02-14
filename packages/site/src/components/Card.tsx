@@ -1,74 +1,33 @@
 import type { ReactNode } from 'react';
-import styled from 'styled-components';
 
-type CardProps = {
-  content: {
-    title?: string;
-    description: ReactNode;
-    button?: ReactNode;
-  };
+type Props = {
+  title?: string;
+  children: ReactNode;
+  footer?: ReactNode;
   disabled?: boolean;
-  fullWidth?: boolean;
 };
 
-const CardWrapper = styled.div<{
-  fullWidth?: boolean | undefined;
-  disabled?: boolean | undefined;
-}>`
-  display: flex;
-  flex-direction: column;
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : '250px')};
-  background: ${({ theme }) => theme.colors.card?.default};
-  margin-top: 2.4rem;
-  margin-bottom: 2.4rem;
-  padding: 2.4rem;
-  border: 1px solid ${({ theme }) => theme.colors.border?.default};
-  border-radius: ${({ theme }) => theme.radii.default};
-  box-shadow: ${({ theme }) => theme.shadows.default};
-  filter: opacity(${({ disabled }) => (disabled ? '.4' : '1')});
-  align-self: stretch;
-  backdrop-filter: blur(14px);
-
-  ${({ disabled }) =>
-    disabled
-      ? ''
-      : `
-    &:hover {
-      transform: translateY(-1px);
-    }
-  `}
-
-  transition: transform 0.14s ease, box-shadow 0.14s ease;
-
-  ${({ theme }) => theme.mediaQueries.small} {
-    width: 100%;
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
-    padding: 1.6rem;
-  }
-`;
-
-const Title = styled.h2`
-  font-size: ${({ theme }) => theme.fontSizes.large};
-  margin: 0;
-  letter-spacing: -0.02em;
-  ${({ theme }) => theme.mediaQueries.small} {
-    font-size: ${({ theme }) => theme.fontSizes.text};
-  }
-`;
-
-const Description = styled.div`
-  margin-top: 2.4rem;
-  margin-bottom: 2.4rem;
-`;
-
-export const Card = ({ content, disabled = false, fullWidth }: CardProps) => {
-  const { title, description, button } = content;
+export const Card = ({ title, children, footer, disabled }: Props) => {
   return (
-    <CardWrapper fullWidth={fullWidth} disabled={disabled}>
-      {title && <Title>{title}</Title>}
-      <Description>{description}</Description>
-      {button}
-    </CardWrapper>
+    <div
+      className={[
+        'rounded-3xl border border-border/70 bg-card/80 shadow-sm backdrop-blur-xl',
+        disabled ? 'opacity-60' : '',
+      ].join(' ')}
+    >
+      <div className="p-6">
+        {title ? (
+          <h3 className="mb-3 font-display text-lg font-semibold text-foreground">
+            {title}
+          </h3>
+        ) : null}
+        <div className="text-sm leading-relaxed text-muted-foreground">
+          {children}
+        </div>
+      </div>
+      {footer ? (
+        <div className="border-t border-border/60 p-4">{footer}</div>
+      ) : null}
+    </div>
   );
 };

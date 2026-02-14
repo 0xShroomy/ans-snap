@@ -6,7 +6,7 @@ const config: GatsbyConfig = {
 
   plugins: [
     'gatsby-plugin-svgr',
-    'gatsby-plugin-styled-components',
+    'gatsby-plugin-postcss',
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
@@ -15,7 +15,7 @@ const config: GatsbyConfig = {
         short_name: 'ANS Snap',
         description:
           'Install the ANS MetaMask Snap to resolve .abs names on Abstract.',
-        icon: 'src/assets/ans-icon.svg',
+        icon: 'static/logo.png',
         theme_color: '#1cd47e',
         background_color: '#0b0f10',
         /* eslint-enable @typescript-eslint/naming-convention */
