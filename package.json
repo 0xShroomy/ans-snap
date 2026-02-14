@@ -23,7 +23,7 @@
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '**/*.yml' '!.yarnrc.yml' --ignore-path .gitignore --no-error-on-unmatched-pattern",
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
-    "test": "yarn workspace @ans/ans-snap run test"
+    "test": "yarn workspace @ans-abstract-name-service/ans-snap run test"
   },
   "resolutions": {
     "cookie": "^0.7.1",

@@ -7,11 +7,11 @@
     "url": "https://github.com/0xShroomy/ans-snap.git"
   },
   "source": {
-    "shasum": "oL56an20xnfZYWVfYuqvmcoSHItKcp7bG9oirvuiDoI=",
+    "shasum": "+mXCooPRcyvxKOtz3eSMYYKrT+Khi0WF6T1WRzUACn8=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "packageName": "@ans/ans-snap",
+        "packageName": "@ans-abstract-name-service/ans-snap",
         "iconPath": "images/icon.svg",
         "registry": "https://registry.npmjs.org/"
       }

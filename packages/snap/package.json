@@ -1,5 +1,5 @@
 {
-  "name": "@ans/ans-snap",
+  "name": "@ans-abstract-name-service/ans-snap",
   "version": "0.1.0",
   "description": "MetaMask name resolution Snap for ANS (.abs) using ANSv2 on Abstract.",
   "repository": {
