@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import {
   Card,
   ConnectButton,
@@ -5,7 +7,12 @@ import {
   ReconnectButton,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
-import { useMetaMask, useMetaMaskContext, useRequestSnap } from '../hooks';
+import {
+  useMetaMask,
+  useMetaMaskContext,
+  useRequest,
+  useRequestSnap,
+} from '../hooks';
 import { isLocalSnap, shouldDisplayReconnectButton } from '../utils';
 
 const SectionHeading = ({ id, title }: { id: string; title: string }) => (
@@ -18,9 +25,11 @@ const SectionHeading = ({ id, title }: { id: string; title: string }) => (
 );
 
 const Index = () => {
-  const { error } = useMetaMaskContext();
+  const { error, provider } = useMetaMaskContext();
   const { isFlask, snapsDetected, installedSnap } = useMetaMask();
+  const request = useRequest();
   const requestSnap = useRequestSnap();
+  const [walletConnected, setWalletConnected] = useState(false);
 
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? isFlask
@@ -29,6 +38,37 @@ const Index = () => {
   const handleConnect = () => {
     requestSnap().catch(() => undefined);
   };
+
+  useEffect(() => {
+    const syncAccounts = async () => {
+      if (!provider) {
+        setWalletConnected(false);
+        return;
+      }
+
+      const accounts = (await request({ method: 'eth_accounts' })) as
+        | string[]
+        | null;
+      setWalletConnected(Boolean(accounts?.[0]));
+    };
+
+    syncAccounts().catch(() => undefined);
+  }, [provider, request]);
+
+  useEffect(() => {
+    if (!provider || typeof provider.on !== 'function') {
+      return;
+    }
+
+    const onAccountsChanged = (accounts: string[]) => {
+      setWalletConnected(Boolean(accounts[0]));
+    };
+
+    provider.on('accountsChanged', onAccountsChanged);
+    return () => {
+      provider.removeListener?.('accountsChanged', onAccountsChanged);
+    };
+  }, [provider]);
 
   return (
     <main className="relative z-10">
@@ -144,16 +184,17 @@ const Index = () => {
 
                 {installedSnap ? null : (
                   <Card
-                    title="Connect"
+                    title="Install Snap"
                     footer={
                       <ConnectButton
                         onClick={handleConnect}
-                        disabled={!isMetaMaskReady}
+                        disabled={!isMetaMaskReady || !walletConnected}
                       />
                     }
-                    disabled={!isMetaMaskReady}
+                    disabled={!isMetaMaskReady || !walletConnected}
                   >
-                    Connect to MetaMask and install the ANS Snap.
+                    Connect your wallet from the header first, then install the
+                    ANS Snap.
                   </Card>
                 )}
 

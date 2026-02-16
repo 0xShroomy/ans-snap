@@ -3,8 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
-import { useMetaMask, useMetaMaskContext, useRequest, useRequestSnap } from '../hooks';
-import { shouldDisplayReconnectButton } from '../utils';
+import { useMetaMask, useMetaMaskContext, useRequest } from '../hooks';
 
 const PrimaryButton = ({
   children,
@@ -54,7 +53,7 @@ export const InstallFlaskButton = () => (
 export const ConnectButton = (props: ComponentProps<'button'>) => (
   <PrimaryButton {...props}>
     <FlaskFox />
-    Connect
+    Install Snap
   </PrimaryButton>
 );
 
@@ -66,10 +65,9 @@ export const ReconnectButton = (props: ComponentProps<'button'>) => (
 );
 
 export const HeaderButtons = () => {
-  const requestSnap = useRequestSnap();
   const request = useRequest();
   const { provider } = useMetaMaskContext();
-  const { isFlask, installedSnap } = useMetaMask();
+  const { isFlask } = useMetaMask();
   const [accountAddress, setAccountAddress] = useState<string | null>(null);
   const [walletMenuOpen, setWalletMenuOpen] = useState(false);
   const [connectModalOpen, setConnectModalOpen] = useState(false);
@@ -77,7 +75,7 @@ export const HeaderButtons = () => {
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   const loadAccounts = useCallback(async () => {
-    if (!provider || !installedSnap) {
+    if (!provider) {
       setAccountAddress(null);
       return;
     }
@@ -86,7 +84,7 @@ export const HeaderButtons = () => {
       | string[]
       | null;
     setAccountAddress(accounts?.[0] ?? null);
-  }, [installedSnap, provider, request]);
+  }, [provider, request]);
 
   useEffect(() => {
     loadAccounts().catch(() => undefined);
@@ -188,10 +186,7 @@ export const HeaderButtons = () => {
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
   }, [accountAddress]);
 
-  const reconnectNeeded = installedSnap
-    ? shouldDisplayReconnectButton(installedSnap)
-    : false;
-  const connected = Boolean(installedSnap && truncatedAddress && !reconnectNeeded);
+  const connected = Boolean(truncatedAddress);
 
   const handleConnect = async () => {
     setConnectModalOpen(false);
@@ -201,7 +196,7 @@ export const HeaderButtons = () => {
       return;
     }
 
-    await requestSnap();
+    await request({ method: 'eth_requestAccounts' });
     await loadAccounts();
   };
 
