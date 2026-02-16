@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Resolve .abs names (ANS V2) directly inside MetaMask.",
   "proposedName": "ANS | Abstract Name Service",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "git+https://github.com/0xShroomy/ans-snap.git"
   },
   "source": {
-    "shasum": "y/MXBoKlHmjzS+XVa+wPdS7C6+8avwoDVP/pLOMHARM=",
+    "shasum": "j6SVSNX3osBpAPtBKdf795r9WjJTRjX1fHYlrLRdJOs=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
