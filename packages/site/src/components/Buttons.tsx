@@ -1,6 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Copy, LogOut, Settings } from 'lucide-react';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
 import { useMetaMask, useMetaMaskContext, useRequest } from '../hooks';
@@ -263,6 +264,7 @@ export const HeaderButtons = () => {
             }}
             className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
           >
+            <Settings className="h-5 w-5 text-muted-foreground" />
             Settings
           </button>
           <button
@@ -272,6 +274,7 @@ export const HeaderButtons = () => {
             }}
             className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
           >
+            <Copy className="h-5 w-5 text-muted-foreground" />
             {truncatedAddress}
           </button>
           <button
@@ -281,6 +284,7 @@ export const HeaderButtons = () => {
             }}
             className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10"
           >
+            <LogOut className="h-5 w-5 text-destructive" />
             Disconnect
           </button>
         </div>
