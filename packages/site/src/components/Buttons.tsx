@@ -2,6 +2,7 @@ import type { ComponentProps, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
+import { ReactComponent as MetaMaskFox } from '../assets/metamask_fox.svg';
 import { useMetaMask, useMetaMaskContext, useRequest, useRequestSnap } from '../hooks';
 import { shouldDisplayReconnectButton } from '../utils';
 
@@ -70,7 +71,8 @@ export const HeaderButtons = () => {
   const { provider } = useMetaMaskContext();
   const { isFlask, installedSnap } = useMetaMask();
   const [accountAddress, setAccountAddress] = useState<string | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [walletMenuOpen, setWalletMenuOpen] = useState(false);
+  const [connectModalOpen, setConnectModalOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   const loadAccounts = useCallback(async () => {
@@ -107,7 +109,7 @@ export const HeaderButtons = () => {
   useEffect(() => {
     const onPointerDown = (event: MouseEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) {
-        setMenuOpen(false);
+        setWalletMenuOpen(false);
       }
     };
 
@@ -122,13 +124,72 @@ export const HeaderButtons = () => {
     return `${accountAddress.slice(0, 6)}...${accountAddress.slice(-4)}`;
   }, [accountAddress]);
 
+  const avatarSrc = useMemo(() => {
+    if (!accountAddress) {
+      return null;
+    }
+
+    const seed = accountAddress.toLowerCase().replace(/^0x/, '');
+    let randSeed = 0;
+    for (let i = 0; i < seed.length; i += 1) {
+      randSeed = (randSeed * 31 + seed.charCodeAt(i)) >>> 0;
+    }
+
+    const rand = () => {
+      randSeed ^= randSeed << 13;
+      randSeed ^= randSeed >>> 17;
+      randSeed ^= randSeed << 5;
+      return (randSeed >>> 0) / 4294967296;
+    };
+
+    const size = 5;
+    const scale = 6;
+    const hue = Math.floor(rand() * 360);
+    const color = `hsl(${hue}, 65%, 55%)`;
+    const spot = `hsl(${(hue + 40) % 360}, 65%, 45%)`;
+    const bg = `hsl(${(hue + 180) % 360}, 30%, 96%)`;
+    const cellSize = scale;
+    const dimension = size * cellSize;
+
+    const rects: string[] = [
+      `<rect width="${dimension}" height="${dimension}" fill="${bg}" />`,
+    ];
+    const columns = Math.ceil(size / 2);
+
+    for (let y = 0; y < size; y += 1) {
+      for (let x = 0; x < columns; x += 1) {
+        const value = Math.floor(rand() * 3);
+        if (value === 0) {
+          continue;
+        }
+
+        const fill = value === 1 ? color : spot;
+        const px = x * cellSize;
+        const py = y * cellSize;
+        rects.push(
+          `<rect x="${px}" y="${py}" width="${cellSize}" height="${cellSize}" fill="${fill}" />`,
+        );
+
+        const mirrorX = (size - 1 - x) * cellSize;
+        if (mirrorX !== px) {
+          rects.push(
+            `<rect x="${mirrorX}" y="${py}" width="${cellSize}" height="${cellSize}" fill="${fill}" />`,
+          );
+        }
+      }
+    }
+
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${dimension}" height="${dimension}" viewBox="0 0 ${dimension} ${dimension}" shape-rendering="crispEdges">${rects.join('')}</svg>`;
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  }, [accountAddress]);
+
   const reconnectNeeded = installedSnap
     ? shouldDisplayReconnectButton(installedSnap)
     : false;
   const connected = Boolean(installedSnap && truncatedAddress && !reconnectNeeded);
 
   const handleConnect = async () => {
-    setMenuOpen(false);
+    setConnectModalOpen(false);
 
     if (!isFlask) {
       window.open('https://metamask.io/flask/', '_blank', 'noopener,noreferrer');
@@ -140,7 +201,7 @@ export const HeaderButtons = () => {
   };
 
   const handleDisconnect = async () => {
-    setMenuOpen(false);
+    setWalletMenuOpen(false);
 
     await request({
       method: 'wallet_revokePermissions',
@@ -150,56 +211,147 @@ export const HeaderButtons = () => {
     setAccountAddress(null);
   };
 
+  const handleCopyAddress = async () => {
+    if (!accountAddress) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(accountAddress);
+    setWalletMenuOpen(false);
+  };
+
   return (
     <div className="relative" ref={rootRef}>
       {connected ? (
         <button
           type="button"
-          onClick={() => setMenuOpen((open) => !open)}
-          className="inline-flex h-10 items-center gap-3 rounded-full border border-border/70 bg-card/80 px-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-accent/30"
+          onClick={() => setWalletMenuOpen((open) => !open)}
+          className={[
+            'inline-flex h-10 items-center gap-3 rounded-full border bg-card/80 px-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-accent/30',
+            walletMenuOpen
+              ? 'border-primary ring-2 ring-primary/80'
+              : 'border-border/70',
+          ].join(' ')}
         >
-          <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-background/80 shadow-sm">
-            <FlaskFox />
-          </span>
+          {avatarSrc ? (
+            <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-background/80 shadow-sm">
+              <img
+                src={avatarSrc}
+                alt="Wallet avatar"
+                className="h-full w-full object-cover"
+              />
+            </span>
+          ) : null}
           <span className="font-mono">{truncatedAddress}</span>
         </button>
       ) : (
         <button
           type="button"
-          onClick={() => setMenuOpen((open) => !open)}
-          className="inline-flex h-10 items-center gap-3 rounded-full border border-border/70 bg-card/80 px-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-accent/30"
+          onClick={() => setConnectModalOpen(true)}
+          className="inline-flex h-10 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-[0_12px_30px_-18px_rgba(16,185,129,0.8)] transition-all hover:brightness-105 focus:outline-none"
         >
-          <span className="h-2.5 w-2.5 rounded-full bg-primary" />
           Connect Wallet
         </button>
       )}
 
-      {menuOpen && (
-        <div className="absolute right-0 top-full z-50 mt-3 w-56 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xl">
-          {connected ? (
-            <button
-              type="button"
-              onClick={() => {
-                handleDisconnect().catch(() => undefined);
-              }}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10"
-            >
-              Disconnect
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                handleConnect().catch(() => undefined);
-              }}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
-            >
-              <FlaskFox />
-              MetaMask
-            </button>
-          )}
+      {walletMenuOpen && connected ? (
+        <div className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xl">
+          <button
+            type="button"
+            onClick={() => {
+              setWalletMenuOpen(false);
+            }}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
+          >
+            Settings
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              handleCopyAddress().catch(() => undefined);
+            }}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
+          >
+            {truncatedAddress}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              handleDisconnect().catch(() => undefined);
+            }}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10"
+          >
+            Disconnect
+          </button>
         </div>
-      )}
+      ) : null}
+
+      {connectModalOpen ? (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
+          <button
+            type="button"
+            aria-label="Close connect modal"
+            className="absolute inset-0 bg-black/50 backdrop-blur-[1px]"
+            onClick={() => setConnectModalOpen(false)}
+          />
+
+          <div className="relative z-10 w-full max-w-md rounded-3xl border border-border/70 bg-card/95 p-6 shadow-[0_30px_80px_-50px_rgba(15,23,42,0.6)]">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="font-display text-2xl text-foreground">
+                  Connect Wallet
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Pick a wallet to claim your .abs handle.
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Close"
+                className="text-2xl leading-none text-muted-foreground transition-colors hover:text-foreground"
+                onClick={() => setConnectModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={() => {
+                  handleConnect().catch(() => undefined);
+                }}
+                className="group flex w-full items-center gap-3 rounded-2xl border border-border/70 bg-background/80 px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card shadow-sm">
+                  <MetaMaskFox className="h-7 w-7" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-foreground">
+                    MetaMask
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Browser extension wallet
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary">
+                  Tap to connect
+                </span>
+              </button>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-border/70 bg-background/80 p-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Why connect?
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                You need a wallet to register, manage records, and prove
+                ownership on-chain.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
