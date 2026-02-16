@@ -1,7 +1,8 @@
 import type { ComponentProps, ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
-import { useMetaMask, useRequestSnap } from '../hooks';
+import { useMetaMask, useMetaMaskContext, useRequest, useRequestSnap } from '../hooks';
 import { shouldDisplayReconnectButton } from '../utils';
 
 const PrimaryButton = ({
@@ -65,7 +66,34 @@ export const ReconnectButton = (props: ComponentProps<'button'>) => (
 
 export const HeaderButtons = () => {
   const requestSnap = useRequestSnap();
+  const request = useRequest();
+  const { provider } = useMetaMaskContext();
   const { isFlask, installedSnap } = useMetaMask();
+  const [accountAddress, setAccountAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadAccounts = async () => {
+      if (!provider || !installedSnap) {
+        setAccountAddress(null);
+        return;
+      }
+
+      const accounts = (await request({ method: 'eth_accounts' })) as
+        | string[]
+        | null;
+      const first = accounts?.[0] ?? null;
+      setAccountAddress(first);
+    };
+
+    loadAccounts().catch(() => undefined);
+  }, [installedSnap, provider, request]);
+
+  const truncatedAddress = useMemo(() => {
+    if (!accountAddress) {
+      return null;
+    }
+    return `${accountAddress.slice(0, 6)}...${accountAddress.slice(-4)}`;
+  }, [accountAddress]);
 
   if (!isFlask && !installedSnap) {
     return <InstallFlaskButton />;
@@ -88,6 +116,18 @@ export const HeaderButtons = () => {
           requestSnap().catch(() => undefined);
         }}
       />
+    );
+  }
+
+  if (truncatedAddress) {
+    return (
+      <button
+        type="button"
+        className="inline-flex h-10 items-center gap-3 rounded-full border border-border/70 bg-card/80 px-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-accent/30"
+      >
+        <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+        <span className="font-mono">{truncatedAddress}</span>
+      </button>
     );
   }
 
