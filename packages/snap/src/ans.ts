@@ -6,8 +6,6 @@ const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 // Abstract mainnet (from this repo's chain config): https://api.mainnet.abs.xyz
 export const ABSTRACT_CAIP2_CHAIN_ID = 'eip155:2741';
 
-// TODO: Confirm this is the final ANSv2 proxy address for Abstract mainnet.
-// This address appears throughout this repo (ABScan links / scripts).
 const ANS_V2_CONTRACT_BY_CHAIN: Record<string, string> = {
   [ABSTRACT_CAIP2_CHAIN_ID]: '0x86a282845a61302Ba4735d111b1a1417f6e617Ad',
 };
