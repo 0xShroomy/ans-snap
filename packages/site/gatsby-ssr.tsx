@@ -12,6 +12,13 @@ export const onRenderBody: GatsbySSR['onRenderBody'] = ({
 }) => {
   setHeadComponents([
     <link
+      key="favicon-svg"
+      rel="icon"
+      href="/favicon.svg"
+      type="image/svg+xml"
+    />,
+    <link key="favicon-ico" rel="shortcut icon" href="/favicon.ico" />,
+    <link
       key="fonts-preconnect-1"
       rel="preconnect"
       href="https://fonts.googleapis.com"

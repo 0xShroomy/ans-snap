@@ -16,6 +16,8 @@ const config: GatsbyConfig = {
         description:
           'Install the ANS MetaMask Snap to resolve .abs names on Abstract.',
         icon: 'static/logo.png',
+        /* Use explicit favicon links from gatsby-ssr.tsx to avoid stale icon caching. */
+        include_favicon: false,
         theme_color: '#1cd47e',
         background_color: '#0b0f10',
         /* eslint-enable @typescript-eslint/naming-convention */
