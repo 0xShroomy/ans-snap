@@ -4,6 +4,7 @@ import type { ComponentProps, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
+import { ReactComponent as MetaMaskFox } from '../assets/metamask_fox.svg';
 import { useMetaMask, useMetaMaskContext, useRequest } from '../hooks';
 
 const PrimaryButton = ({
@@ -187,7 +188,13 @@ export const HeaderButtons = () => {
 
   const connected = Boolean(truncatedAddress);
 
-  const handleConnect = async () => {
+  const requestAccounts = async () => {
+    setConnectModalOpen(false);
+    await request({ method: 'eth_requestAccounts' });
+    await loadAccounts();
+  };
+
+  const handleConnectFlask = async () => {
     setConnectModalOpen(false);
 
     if (!isFlask) {
@@ -199,8 +206,11 @@ export const HeaderButtons = () => {
       return;
     }
 
-    await request({ method: 'eth_requestAccounts' });
-    await loadAccounts();
+    await requestAccounts();
+  };
+
+  const handleConnectMetaMask = async () => {
+    await requestAccounts();
   };
 
   const handleDisconnect = async () => {
@@ -294,11 +304,11 @@ export const HeaderButtons = () => {
                   </button>
                 </div>
 
-                <div className="mt-5">
+                <div className="mt-5 space-y-3">
                   <button
                     type="button"
                     onClick={() => {
-                      handleConnect().catch(() => undefined);
+                      handleConnectFlask().catch(() => undefined);
                     }}
                     className="group flex w-full items-center gap-3 rounded-2xl border border-border/70 bg-background/80 px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
                   >
@@ -310,7 +320,30 @@ export const HeaderButtons = () => {
                         MetaMask Flask
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Browser extension wallet
+                        Browser extension wallet (local snap testing)
+                      </p>
+                    </div>
+                    <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary">
+                      Tap to connect
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleConnectMetaMask().catch(() => undefined);
+                    }}
+                    className="group flex w-full items-center gap-3 rounded-2xl border border-border/70 bg-background/80 px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card shadow-sm">
+                      <MetaMaskFox className="h-7 w-7" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-foreground">
+                        MetaMask
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Browser extension wallet (production users)
                       </p>
                     </div>
                     <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary">
