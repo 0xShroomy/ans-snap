@@ -1,7 +1,7 @@
-import type { ComponentProps, ReactNode } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { LogOut } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
 import { useMetaMask, useMetaMaskContext, useRequest } from '../hooks';
@@ -93,7 +93,7 @@ export const HeaderButtons = () => {
 
   useEffect(() => {
     if (!provider || typeof provider.on !== 'function') {
-      return;
+      return undefined;
     }
 
     const onAccountsChanged = (accounts: string[]) => {
@@ -133,17 +133,15 @@ export const HeaderButtons = () => {
       return null;
     }
 
-    const seed = accountAddress.toLowerCase().replace(/^0x/, '');
-    let randSeed = 0;
-    for (let i = 0; i < seed.length; i += 1) {
-      randSeed = (randSeed * 31 + seed.charCodeAt(i)) >>> 0;
+    const seed = accountAddress.toLowerCase().replace(/^0x/u, '');
+    let randomState = 1;
+    for (let index = 0; index < seed.length; index += 1) {
+      randomState = (randomState * 31 + seed.charCodeAt(index)) % 2147483647;
     }
 
     const rand = () => {
-      randSeed ^= randSeed << 13;
-      randSeed ^= randSeed >>> 17;
-      randSeed ^= randSeed << 5;
-      return (randSeed >>> 0) / 4294967296;
+      randomState = (randomState * 48271) % 2147483647;
+      return randomState / 2147483647;
     };
 
     const size = 5;
@@ -160,21 +158,21 @@ export const HeaderButtons = () => {
     ];
     const columns = Math.ceil(size / 2);
 
-    for (let y = 0; y < size; y += 1) {
-      for (let x = 0; x < columns; x += 1) {
+    for (let rowIndex = 0; rowIndex < size; rowIndex += 1) {
+      for (let columnIndex = 0; columnIndex < columns; columnIndex += 1) {
         const value = Math.floor(rand() * 3);
         if (value === 0) {
           continue;
         }
 
         const fill = value === 1 ? color : spot;
-        const px = x * cellSize;
-        const py = y * cellSize;
+        const px = columnIndex * cellSize;
+        const py = rowIndex * cellSize;
         rects.push(
           `<rect x="${px}" y="${py}" width="${cellSize}" height="${cellSize}" fill="${fill}" />`,
         );
 
-        const mirrorX = (size - 1 - x) * cellSize;
+        const mirrorX = (size - 1 - columnIndex) * cellSize;
         if (mirrorX !== px) {
           rects.push(
             `<rect x="${mirrorX}" y="${py}" width="${cellSize}" height="${cellSize}" fill="${fill}" />`,
@@ -193,7 +191,11 @@ export const HeaderButtons = () => {
     setConnectModalOpen(false);
 
     if (!isFlask) {
-      window.open('https://metamask.io/flask/', '_blank', 'noopener,noreferrer');
+      window.open(
+        'https://metamask.io/flask/',
+        '_blank',
+        'noopener,noreferrer',
+      );
       return;
     }
 
@@ -204,9 +206,10 @@ export const HeaderButtons = () => {
   const handleDisconnect = async () => {
     setWalletMenuOpen(false);
 
+    const accountsPermission = 'eth_accounts';
     await request({
       method: 'wallet_revokePermissions',
-      params: [{ eth_accounts: {} }],
+      params: [{ [accountsPermission]: {} }],
     });
 
     setAccountAddress(null);

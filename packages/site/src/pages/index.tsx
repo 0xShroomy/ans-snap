@@ -57,7 +57,7 @@ const Index = () => {
 
   useEffect(() => {
     if (!provider || typeof provider.on !== 'function') {
-      return;
+      return undefined;
     }
 
     const onAccountsChanged = (accounts: string[]) => {
