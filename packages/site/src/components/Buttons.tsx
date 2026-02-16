@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
 import { useMetaMask, useMetaMaskContext, useRequest, useRequestSnap } from '../hooks';
@@ -70,23 +70,50 @@ export const HeaderButtons = () => {
   const { provider } = useMetaMaskContext();
   const { isFlask, installedSnap } = useMetaMask();
   const [accountAddress, setAccountAddress] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  const loadAccounts = useCallback(async () => {
+    if (!provider || !installedSnap) {
+      setAccountAddress(null);
+      return;
+    }
+
+    const accounts = (await request({ method: 'eth_accounts' })) as
+      | string[]
+      | null;
+    setAccountAddress(accounts?.[0] ?? null);
+  }, [installedSnap, provider, request]);
 
   useEffect(() => {
-    const loadAccounts = async () => {
-      if (!provider || !installedSnap) {
-        setAccountAddress(null);
-        return;
-      }
+    loadAccounts().catch(() => undefined);
+  }, [loadAccounts]);
 
-      const accounts = (await request({ method: 'eth_accounts' })) as
-        | string[]
-        | null;
-      const first = accounts?.[0] ?? null;
-      setAccountAddress(first);
+  useEffect(() => {
+    if (!provider || typeof provider.on !== 'function') {
+      return;
+    }
+
+    const onAccountsChanged = (accounts: string[]) => {
+      setAccountAddress(accounts[0] ?? null);
     };
 
-    loadAccounts().catch(() => undefined);
-  }, [installedSnap, provider, request]);
+    provider.on('accountsChanged', onAccountsChanged);
+    return () => {
+      provider.removeListener?.('accountsChanged', onAccountsChanged);
+    };
+  }, [provider]);
+
+  useEffect(() => {
+    const onPointerDown = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('mousedown', onPointerDown);
+    return () => window.removeEventListener('mousedown', onPointerDown);
+  }, []);
 
   const truncatedAddress = useMemo(() => {
     if (!accountAddress) {
@@ -95,46 +122,84 @@ export const HeaderButtons = () => {
     return `${accountAddress.slice(0, 6)}...${accountAddress.slice(-4)}`;
   }, [accountAddress]);
 
-  if (!isFlask && !installedSnap) {
-    return <InstallFlaskButton />;
-  }
+  const reconnectNeeded = installedSnap
+    ? shouldDisplayReconnectButton(installedSnap)
+    : false;
+  const connected = Boolean(installedSnap && truncatedAddress && !reconnectNeeded);
 
-  if (!installedSnap) {
-    return (
-      <ConnectButton
-        onClick={() => {
-          requestSnap().catch(() => undefined);
-        }}
-      />
-    );
-  }
+  const handleConnect = async () => {
+    setMenuOpen(false);
 
-  if (shouldDisplayReconnectButton(installedSnap)) {
-    return (
-      <ReconnectButton
-        onClick={() => {
-          requestSnap().catch(() => undefined);
-        }}
-      />
-    );
-  }
+    if (!isFlask) {
+      window.open('https://metamask.io/flask/', '_blank', 'noopener,noreferrer');
+      return;
+    }
 
-  if (truncatedAddress) {
-    return (
-      <button
-        type="button"
-        className="inline-flex h-10 items-center gap-3 rounded-full border border-border/70 bg-card/80 px-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-accent/30"
-      >
-        <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-        <span className="font-mono">{truncatedAddress}</span>
-      </button>
-    );
-  }
+    await requestSnap();
+    await loadAccounts();
+  };
+
+  const handleDisconnect = async () => {
+    setMenuOpen(false);
+
+    await request({
+      method: 'wallet_revokePermissions',
+      params: [{ eth_accounts: {} }],
+    });
+
+    setAccountAddress(null);
+  };
 
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/80 px-4 py-2 text-sm font-bold text-foreground shadow-sm backdrop-blur">
-      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-      Connected
+    <div className="relative" ref={rootRef}>
+      {connected ? (
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          className="inline-flex h-10 items-center gap-3 rounded-full border border-border/70 bg-card/80 px-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-accent/30"
+        >
+          <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-background/80 shadow-sm">
+            <FlaskFox />
+          </span>
+          <span className="font-mono">{truncatedAddress}</span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          className="inline-flex h-10 items-center gap-3 rounded-full border border-border/70 bg-card/80 px-4 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-accent/30"
+        >
+          <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+          Connect Wallet
+        </button>
+      )}
+
+      {menuOpen && (
+        <div className="absolute right-0 top-full z-50 mt-3 w-56 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xl">
+          {connected ? (
+            <button
+              type="button"
+              onClick={() => {
+                handleDisconnect().catch(() => undefined);
+              }}
+              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10"
+            >
+              Disconnect
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                handleConnect().catch(() => undefined);
+              }}
+              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
+            >
+              <FlaskFox />
+              MetaMask
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
