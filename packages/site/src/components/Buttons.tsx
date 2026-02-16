@@ -1,8 +1,8 @@
 import type { ComponentProps, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
-import { ReactComponent as MetaMaskFox } from '../assets/metamask_fox.svg';
 import { useMetaMask, useMetaMaskContext, useRequest, useRequestSnap } from '../hooks';
 import { shouldDisplayReconnectButton } from '../utils';
 
@@ -73,6 +73,7 @@ export const HeaderButtons = () => {
   const [accountAddress, setAccountAddress] = useState<string | null>(null);
   const [walletMenuOpen, setWalletMenuOpen] = useState(false);
   const [connectModalOpen, setConnectModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   const loadAccounts = useCallback(async () => {
@@ -105,6 +106,10 @@ export const HeaderButtons = () => {
       provider.removeListener?.('accountsChanged', onAccountsChanged);
     };
   }, [provider]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onPointerDown = (event: MouseEvent) => {
@@ -286,72 +291,75 @@ export const HeaderButtons = () => {
         </div>
       ) : null}
 
-      {connectModalOpen ? (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
-          <button
-            type="button"
-            aria-label="Close connect modal"
-            className="absolute inset-0 bg-black/50 backdrop-blur-[1px]"
-            onClick={() => setConnectModalOpen(false)}
-          />
-
-          <div className="relative z-10 w-full max-w-md rounded-3xl border border-border/70 bg-card/95 p-6 shadow-[0_30px_80px_-50px_rgba(15,23,42,0.6)]">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="font-display text-2xl text-foreground">
-                  Connect Wallet
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Pick a wallet to claim your .abs handle.
-                </p>
-              </div>
+      {connectModalOpen && mounted
+        ? createPortal(
+            <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
               <button
                 type="button"
-                aria-label="Close"
-                className="text-2xl leading-none text-muted-foreground transition-colors hover:text-foreground"
+                aria-label="Close connect modal"
+                className="absolute inset-0 bg-black/50 backdrop-blur-[1px]"
                 onClick={() => setConnectModalOpen(false)}
-              >
-                ×
-              </button>
-            </div>
+              />
 
-            <div className="mt-5">
-              <button
-                type="button"
-                onClick={() => {
-                  handleConnect().catch(() => undefined);
-                }}
-                className="group flex w-full items-center gap-3 rounded-2xl border border-border/70 bg-background/80 px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card shadow-sm">
-                  <MetaMaskFox className="h-7 w-7" />
+              <div className="relative z-10 w-full max-w-md rounded-3xl border border-border/70 bg-card/95 p-6 shadow-[0_30px_80px_-50px_rgba(15,23,42,0.6)]">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-display text-2xl text-foreground">
+                      Connect Wallet
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Pick a wallet to claim your .abs handle.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="Close"
+                    className="text-2xl leading-none text-muted-foreground transition-colors hover:text-foreground"
+                    onClick={() => setConnectModalOpen(false)}
+                  >
+                    ×
+                  </button>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-foreground">
-                    MetaMask
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Browser extension wallet
-                  </p>
-                </div>
-                <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary">
-                  Tap to connect
-                </span>
-              </button>
-            </div>
 
-            <div className="mt-5 rounded-2xl border border-border/70 bg-background/80 p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                Why connect?
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                You need a wallet to register, manage records, and prove
-                ownership on-chain.
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : null}
+                <div className="mt-5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleConnect().catch(() => undefined);
+                    }}
+                    className="group flex w-full items-center gap-3 rounded-2xl border border-border/70 bg-background/80 px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card shadow-sm">
+                      <FlaskFox className="h-7 w-7" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-foreground">
+                        MetaMask Flask
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Browser extension wallet
+                      </p>
+                    </div>
+                    <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary">
+                      Tap to connect
+                    </span>
+                  </button>
+                </div>
+
+                <div className="mt-5 rounded-2xl border border-border/70 bg-background/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                    Why connect?
+                  </p>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    You need a wallet to register, manage records, and prove
+                    ownership on-chain.
+                  </p>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 };
