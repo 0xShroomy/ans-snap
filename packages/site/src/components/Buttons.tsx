@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Copy, LogOut, Settings } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
 import { useMetaMask, useMetaMaskContext, useRequest } from '../hooks';
@@ -212,15 +212,6 @@ export const HeaderButtons = () => {
     setAccountAddress(null);
   };
 
-  const handleCopyAddress = async () => {
-    if (!accountAddress) {
-      return;
-    }
-
-    await navigator.clipboard.writeText(accountAddress);
-    setWalletMenuOpen(false);
-  };
-
   return (
     <div className="relative" ref={rootRef}>
       {connected ? (
@@ -257,26 +248,6 @@ export const HeaderButtons = () => {
 
       {walletMenuOpen && connected ? (
         <div className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xl">
-          <button
-            type="button"
-            onClick={() => {
-              setWalletMenuOpen(false);
-            }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
-          >
-            <Settings className="h-5 w-5 text-muted-foreground" />
-            Settings
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              handleCopyAddress().catch(() => undefined);
-            }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-accent/40"
-          >
-            <Copy className="h-5 w-5 text-muted-foreground" />
-            {truncatedAddress}
-          </button>
           <button
             type="button"
             onClick={() => {
