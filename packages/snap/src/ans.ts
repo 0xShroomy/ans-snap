@@ -10,17 +10,19 @@ const ANS_V2_CONTRACT_BY_CHAIN: Record<string, string> = {
   [ABSTRACT_CAIP2_CHAIN_ID]: '0x86a282845a61302Ba4735d111b1a1417f6e617Ad',
 };
 
+const CHAIN_RPC_URL_BY_CHAIN: Record<string, string> = {
+  [ABSTRACT_CAIP2_CHAIN_ID]: 'https://api.mainnet.abs.xyz',
+};
+
 // Function selectors (computed via `cast sig "<signature>"`).
 const SELECTOR_RECORDS_STRING = '0x541e771d'; // records(string)
 const SELECTOR_DOMAINS_STRING = '0x26449235'; // domains(string)
 const SELECTOR_GET_NAME_BY_ADDRESS = '0x7c80bb4f'; // getNameByAddress(address)
 
-type EthereumRequest = (args: {
-  method: string;
-  params?: unknown[] | Record<string, unknown>;
-}) => Promise<unknown>;
-
-declare const ethereum: { request: EthereumRequest };
+type JsonRpcResponse = {
+  result?: unknown;
+  error?: { code?: number; message?: string; data?: unknown };
+};
 
 function strip0x(hexString: string): string {
   return hexString.startsWith('0x') ? hexString.slice(2) : hexString;
@@ -143,16 +145,44 @@ function normalizeNamePartFromDomain(domain: string): string | null {
   return namePart;
 }
 
-async function ethCall(to: string, data: string): Promise<string> {
-  const result = await ethereum.request({
-    method: 'eth_call',
-    params: [{ to, data }, 'latest'],
+async function rpcEthCall(
+  rpcUrl: string,
+  to: string,
+  data: string,
+): Promise<string> {
+  const response = await fetch(rpcUrl, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'eth_call',
+      params: [{ to, data }, 'latest'],
+    }),
   });
 
-  if (typeof result !== 'string') {
-    throw new Error('Invalid eth_call result.');
+  if (!response.ok) {
+    throw new Error(`RPC request failed: ${response.status}`);
   }
-  return result;
+
+  const payload = (await response.json()) as JsonRpcResponse;
+  if (payload.error) {
+    throw new Error(payload.error.message ?? 'RPC eth_call error.');
+  }
+  if (typeof payload.result !== 'string') {
+    throw new Error('Invalid RPC eth_call result.');
+  }
+
+  return payload.result;
+}
+
+async function ethCall(chainId: string, to: string, data: string): Promise<string> {
+  const rpcUrl = CHAIN_RPC_URL_BY_CHAIN[chainId];
+  if (!rpcUrl) {
+    throw new Error(`Unsupported chain for RPC call: ${chainId}`);
+  }
+
+  return rpcEthCall(rpcUrl, to, data);
 }
 
 export async function resolveAbsDomainToAddress(
@@ -174,7 +204,7 @@ export async function resolveAbsDomainToAddress(
     encodeStringArg(namePart),
   );
   const owner = decodeAddressReturn(
-    await ethCall(contract, ownerData),
+    await ethCall(chainId, contract, ownerData),
   ).toLowerCase();
   if (owner === ZERO_ADDRESS || owner === DEAD_ADDRESS) {
     return null;
@@ -184,7 +214,9 @@ export async function resolveAbsDomainToAddress(
     SELECTOR_RECORDS_STRING,
     encodeStringArg(namePart),
   );
-  const record = decodeStringReturn(await ethCall(contract, recordData)).trim();
+  const record = decodeStringReturn(
+    await ethCall(chainId, contract, recordData),
+  ).trim();
 
   const resolved = isHexAddress(record) ? record.toLowerCase() : owner;
   return { address: resolved, domainName: `${namePart}.abs` };
@@ -206,7 +238,7 @@ export async function reverseLookupAbsDomain(
     SELECTOR_GET_NAME_BY_ADDRESS,
     encodeAddressArg(address),
   );
-  const namePart = decodeStringReturn(await ethCall(contract, data))
+  const namePart = decodeStringReturn(await ethCall(chainId, contract, data))
     .trim()
     .toLowerCase();
 

@@ -5,37 +5,43 @@ import { reverseLookupAbsDomain, resolveAbsDomainToAddress } from './ans';
 const PROTOCOL = 'ANS';
 
 export const onNameLookup: OnNameLookupHandler = async (args) => {
-  if ('domain' in args) {
-    const result = await resolveAbsDomainToAddress(args.chainId, args.domain);
-    if (!result) {
+  try {
+    if ('domain' in args) {
+      const result = await resolveAbsDomainToAddress(args.chainId, args.domain);
+      if (!result) {
+        return null;
+      }
+
+      return {
+        resolvedAddresses: [
+          {
+            protocol: PROTOCOL,
+            resolvedAddress: result.address,
+            domainName: result.domainName,
+          },
+        ],
+      };
+    }
+
+    const resolvedDomain = await reverseLookupAbsDomain(
+      args.chainId,
+      args.address,
+    );
+    if (!resolvedDomain) {
       return null;
     }
 
     return {
-      resolvedAddresses: [
+      resolvedDomains: [
         {
           protocol: PROTOCOL,
-          resolvedAddress: result.address,
-          domainName: result.domainName,
+          resolvedDomain,
         },
       ],
     };
-  }
-
-  const resolvedDomain = await reverseLookupAbsDomain(
-    args.chainId,
-    args.address,
-  );
-  if (!resolvedDomain) {
+  } catch {
+    // Never bubble lookup failures to MetaMask. Returning null tells MM that
+    // this snap has no resolution result for the current request context.
     return null;
   }
-
-  return {
-    resolvedDomains: [
-      {
-        protocol: PROTOCOL,
-        resolvedDomain,
-      },
-    ],
-  };
 };

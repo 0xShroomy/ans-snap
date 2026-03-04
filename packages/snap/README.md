@@ -20,9 +20,9 @@ Resolution rules (forward lookup):
 ## Permissions
 
 - `endowment:name-lookup` (TLD matcher: `abs`, chain allowlist: `eip155:2741`)
-- `endowment:ethereum-provider` (used for `eth_call` to ANSv2)
+- `endowment:network-access` (direct RPC calls to Abstract)
 
-No external HTTP / `endowment:network-access` is used.
+External HTTP is used only for direct JSON-RPC to the Abstract endpoint.
 
 ## Install (Production)
 

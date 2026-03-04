@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Resolve .abs names (ANS V2) directly inside MetaMask.",
   "proposedName": "ANS | Abstract Name Service",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "git+https://github.com/0xShroomy/ans-snap.git"
   },
   "source": {
-    "shasum": "j6SVSNX3osBpAPtBKdf795r9WjJTRjX1fHYlrLRdJOs=",
+    "shasum": "nPqrzsM7u3H68Gt60vAEkUmSFouWWktgPAeO2LDEBOU=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -18,7 +18,7 @@
     }
   },
   "initialPermissions": {
-    "endowment:ethereum-provider": {},
+    "endowment:network-access": {},
     "endowment:name-lookup": {
       "chains": ["eip155:2741"],
       "matchers": {
