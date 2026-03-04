@@ -13,12 +13,12 @@ describe('onNameLookup', () => {
       .spyOn(ans, 'resolveAbsDomainToAddress')
       .mockRejectedValue(new Error('boom'));
 
-    await expect(
-      onNameLookup({
+    expect(
+      await onNameLookup({
         chainId: 'eip155:2741',
         domain: 'alice.abs',
       } as never),
-    ).resolves.toBeNull();
+    ).toBeNull();
 
     spy.mockRestore();
   });
@@ -28,12 +28,12 @@ describe('onNameLookup', () => {
       .spyOn(ans, 'reverseLookupAbsDomain')
       .mockRejectedValue(new Error('boom'));
 
-    await expect(
-      onNameLookup({
+    expect(
+      await onNameLookup({
         chainId: 'eip155:2741',
         address: '0x0000000000000000000000000000000000000001',
       } as never),
-    ).resolves.toBeNull();
+    ).toBeNull();
 
     spy.mockRestore();
   });

@@ -176,7 +176,11 @@ async function rpcEthCall(
   return payload.result;
 }
 
-async function ethCall(chainId: string, to: string, data: string): Promise<string> {
+async function ethCall(
+  chainId: string,
+  to: string,
+  data: string,
+): Promise<string> {
   const rpcUrl = CHAIN_RPC_URL_BY_CHAIN[chainId];
   if (!rpcUrl) {
     throw new Error(`Unsupported chain for RPC call: ${chainId}`);
