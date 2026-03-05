@@ -3006,8 +3006,8 @@ __metadata:
   linkType: hard
 
 "@metamask/json-rpc-engine@npm:^10.0.2, @metamask/json-rpc-engine@npm:^10.0.3, @metamask/json-rpc-engine@npm:^10.1.0, @metamask/json-rpc-engine@npm:^10.1.1, @metamask/json-rpc-engine@npm:^10.2.0":
-  version: 10.2.1
-  resolution: "@metamask/json-rpc-engine@npm:10.2.1"
+  version: 10.2.2
+  resolution: "@metamask/json-rpc-engine@npm:10.2.2"
   dependencies:
     "@metamask/rpc-errors": ^7.0.2
     "@metamask/safe-event-emitter": ^3.0.0
@@ -3015,7 +3015,7 @@ __metadata:
     "@types/deep-freeze-strict": ^1.1.0
     deep-freeze-strict: ^1.1.1
     klona: ^2.0.6
-  checksum: 7d771bd992c518b3c7c91f7d4a2d038cb70f567802f06c61eb974825fd259cb17d8c194476e2214cacc4accc790964f691933b8a27bf1ed6682cd2e8d7b0254a
+  checksum: ce22bb051f840a2b5032e87acb753ba3c2939e977782e0d99eccb6709f8aa6faa697bf69ec2b1a5222c0f45fa9e4281a7cf2ef42838e9d731694285d13ab898e
   languageName: node
   linkType: hard
 
